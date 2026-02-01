@@ -1,42 +1,16 @@
-/* Forever Faded — Gold, Black, Blue & Red (matches logo) */
+/* Forever Faded — brand colors (from forever-faded-platform) */
 :root {
-  /* Primary brand */
   --ff-black: #0a0a0a;
-  --ff-black-soft: #111111;
-  --ff-black-card: #161616;
-  --ff-gold: #c9a227;
-  --ff-gold-light: #e5c158;
-  --ff-gold-dim: rgba(201, 162, 39, 0.5);
+  --ff-gold: #d4af37;
+  --ff-gold-light: #e8c547;
   --ff-white: #ffffff;
-  /* Highlights from logo (barber pole) */
-  --ff-blue: #1e5aa8;
-  --ff-blue-light: #2563eb;
-  --ff-red: #b91c1c;
-  --ff-red-light: #dc2626;
-  /* UI */
+  --ff-red: #dc2626;
+  --ff-blue: #2563eb;
   --ff-gray: rgba(255, 255, 255, 0.6);
-  --ff-gray-dim: rgba(255, 255, 255, 0.4);
   --ff-bg: #0a0a0a;
-  --ff-card: rgba(22, 22, 22, 0.98);
-  --ff-border: rgba(201, 162, 39, 0.35);
-  --ff-border-blue: rgba(30, 90, 168, 0.4);
-  --ff-border-red: rgba(185, 28, 28, 0.4);
-}
-
-/* Subtle gold wave background (logo-style accent) */
-.ff-bg-waves {
-  position: relative;
-  overflow: hidden;
-}
-.ff-bg-waves::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120' fill='none' opacity='0.08'%3E%3Cpath d='M0 60 Q50 20 100 60 T200 60 T300 60 T400 60' stroke='%23c9a227' stroke-width='1.5' fill='none'/%3E%3Cpath d='M0 70 Q80 30 160 70 T320 70' stroke='%23c9a227' stroke-width='1' fill='none'/%3E%3Cpath d='M0 50 Q60 80 120 50 T240 50 T360 50' stroke='%23c9a227' stroke-width='1' fill='none'/%3E%3C/svg%3E");
-  background-size: 400px 120px;
-  background-repeat: repeat-x;
-  background-position: 0 0;
-  pointer-events: none;
+  --ff-card: rgba(26, 26, 26, 0.95);
+  --ff-border: rgba(212, 175, 55, 0.3);
+  --ff-fg: #1a1a1a;
 }
 
 * {
@@ -78,12 +52,11 @@ input, select, textarea {
 }
 
 .page-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2rem;
-  font-weight: 400;
+  font-size: 1.75rem;
+  font-weight: 700;
   color: var(--ff-gold);
   margin-bottom: 0.25rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
 }
 
 .page-subtitle {
@@ -114,14 +87,6 @@ input, select, textarea {
   color: var(--ff-gold);
 }
 
-.page-card-item .ff-accent-blue {
-  color: var(--ff-blue-light);
-}
-
-.page-card-item .ff-accent-red {
-  color: var(--ff-red-light);
-}
-
 /* Shared buttons */
 .btn {
   padding: 0.75rem 1.25rem;
@@ -141,7 +106,7 @@ input, select, textarea {
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(201, 162, 39, 0.35);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
 }
 
 .btn-secondary {
@@ -151,17 +116,7 @@ input, select, textarea {
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(201, 162, 39, 0.12);
-}
-
-.btn-accent-blue {
-  border: 1px solid var(--ff-blue);
-  color: var(--ff-blue-light);
-  background: rgba(30, 90, 168, 0.15);
-}
-
-.btn-accent-blue:hover:not(:disabled) {
-  background: rgba(30, 90, 168, 0.25);
+  background: rgba(212, 175, 55, 0.1);
 }
 
 /* Override Amplify Authenticator to match brand */
@@ -179,5 +134,25 @@ input, select, textarea {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: var(--ff-bg);
+  background: linear-gradient(135deg, var(--ff-black) 0%, #1a1a1a 100%);
+}
+[data-amplify-authenticator] [data-amplify-router] {
+  width: 100%;
+  max-width: 400px;
+  background: var(--ff-card);
+  border: 1px solid var(--ff-border);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+[data-amplify-authenticator] [data-amplify-form] {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+[data-amplify-authenticator] button[type="submit"] {
+  background: linear-gradient(135deg, var(--ff-gold), var(--ff-gold-light)) !important;
+  color: var(--ff-black) !important;
+  font-weight: 700;
 }

@@ -17,10 +17,9 @@
 }
 
 .error-boundary-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.5rem;
-  letter-spacing: 0.08em;
-  color: var(--ff-red-light);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ff-red);
   margin-bottom: 0.5rem;
 }
 

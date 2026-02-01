@@ -1,48 +1,12 @@
-/* Forever Faded Dashboard — Gold, Black, Blue & Red */
+/* Forever Faded Dashboard (from forever-faded-platform) */
 .dashboard-page {
   max-width: 1000px;
 }
 
-.dashboard-hero {
-  position: relative;
-  padding: 2rem 0 2.5rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--ff-border);
-}
-
-.dashboard-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 140px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 80' fill='none' opacity='0.12'%3E%3Cpath d='M0 40 Q100 10 200 40 T400 40 T600 40 T800 40' stroke='%23c9a227' stroke-width='2' fill='none'/%3E%3Cpath d='M0 55 Q150 20 300 55 T600 55 T800 55' stroke='%23c9a227' stroke-width='1.2' fill='none'/%3E%3Cpath d='M0 25 Q80 55 160 25 T320 25 T480 25 T640 25 T800 25' stroke='%23c9a227' stroke-width='1' fill='none'/%3E%3C/svg%3E");
-  background-size: 800px 80px;
-  background-repeat: repeat-x;
-  pointer-events: none;
-}
-
-.dashboard-hero-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.25rem;
-  letter-spacing: 0.12em;
-  color: var(--ff-gold);
-  margin-bottom: 0.25rem;
-  position: relative;
-}
-
-.dashboard-hero-subtitle {
-  color: var(--ff-gray);
-  font-size: 1rem;
-  position: relative;
-}
-
-/* Stat cards — Gold, Blue, Red accents */
 .dashboard-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -50,63 +14,26 @@
   background: var(--ff-card);
   border: 1px solid var(--ff-border);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.stat-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-.stat-card.stat-card-gold {
-  border-color: rgba(201, 162, 39, 0.5);
-}
-
-.stat-card.stat-card-gold .stat-icon {
-  color: var(--ff-gold);
-}
-
-.stat-card.stat-card-blue {
-  border-color: var(--ff-border-blue);
-}
-
-.stat-card.stat-card-blue .stat-icon {
-  color: var(--ff-blue-light);
-}
-
-.stat-card.stat-card-blue .stat-value {
-  color: var(--ff-blue-light);
-}
-
-.stat-card.stat-card-red {
-  border-color: var(--ff-border-red);
-}
-
-.stat-card.stat-card-red .stat-icon {
-  color: var(--ff-red-light);
-}
-
-.stat-card.stat-card-red .stat-value {
-  color: var(--ff-red-light);
 }
 
 .stat-card-link {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
 }
 
 .stat-card-link:hover {
   border-color: var(--ff-gold);
-  box-shadow: 0 8px 24px rgba(201, 162, 39, 0.15);
+  background: rgba(212, 175, 55, 0.08);
 }
 
 .stat-icon {
   color: var(--ff-gold);
-  margin-bottom: 0.25rem;
 }
 
 .stat-value {
@@ -116,34 +43,15 @@
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--ff-gray);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .dashboard-section {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.35rem;
-  letter-spacing: 0.08em;
+  font-size: 1.25rem;
+  font-weight: 600;
   color: var(--ff-gold);
   margin-bottom: 1rem;
-}
-
-.dashboard-tools {
-  background: var(--ff-card);
-  border: 1px solid var(--ff-border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-}
-
-.dashboard-tools .btn-primary {
-  margin-top: 0.5rem;
-}
-
-.dashboard-footer-note {
-  margin-top: 1.5rem;
-  font-size: 0.85rem;
-  color: var(--ff-gray);
 }

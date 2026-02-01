@@ -1,4 +1,4 @@
-/* Forever Faded Book page — Gold, Black, Blue & Red */
+/* Forever Faded Book page (from forever-faded-platform) */
 .book-page {
   max-width: 900px;
   margin: 0 auto;
@@ -25,12 +25,6 @@
   color: var(--ff-gold);
 }
 
-.book-step.done .book-step-num {
-  background: var(--ff-blue);
-  border-color: var(--ff-blue);
-  color: var(--ff-white);
-}
-
 .book-step-num {
   width: 32px;
   height: 32px;
@@ -40,7 +34,6 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  transition: background 0.2s, border-color 0.2s;
 }
 
 .book-step.active .book-step-num {
@@ -85,25 +78,11 @@
   margin-bottom: 1rem;
 }
 
-.book-select:focus,
-.book-input:focus {
-  outline: none;
-  border-color: var(--ff-gold);
-}
-
 .book-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
-}
-
-.book-grid.barbers {
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-}
-
-.book-grid.time-slots {
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
 }
 
 .book-card {
@@ -119,12 +98,11 @@
 
 .book-card:hover {
   border-color: var(--ff-gold);
-  background: rgba(201, 162, 39, 0.06);
 }
 
 .book-card.selected {
   border-color: var(--ff-gold);
-  background: rgba(201, 162, 39, 0.12);
+  background: rgba(212, 175, 55, 0.1);
 }
 
 .book-card-price {
@@ -137,14 +115,14 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--ff-gold), var(--ff-blue));
+  background: linear-gradient(135deg, var(--ff-gold), var(--ff-red));
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 1.25rem;
   margin: 0 auto 0.5rem;
-  color: var(--ff-white);
+  color: var(--ff-black);
 }
 
 .book-actions {
@@ -177,9 +155,8 @@
 }
 
 .dashboard-section {
-  font-family: 'Bebas Neue', sans-serif;
   font-size: 1.25rem;
-  letter-spacing: 0.08em;
+  font-weight: 600;
   color: var(--ff-gold);
   margin-bottom: 0.75rem;
 }
