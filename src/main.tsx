@@ -4,6 +4,7 @@ import { Amplify } from 'aws-amplify';
 import { AuthProvider } from 'react-oidc-context';
 import App from './App';
 import AuthGate from './components/AuthGate';
+import ErrorBoundary from './components/ErrorBoundary';
 import { cognitoAuthConfig } from './config/cognito';
 import './index.css';
 import './styles/Login.css';
@@ -14,7 +15,10 @@ import '@aws-amplify/ui-react/styles.css';
 function loadAmplifyConfig(): Promise<Record<string, unknown>> {
   return import('../amplify_outputs.json')
     .then((m) => (m?.default ?? m) as Record<string, unknown>)
-    .catch(() => ({}));
+    .catch((err) => {
+      console.warn('Amplify config not loaded (expected if backend not deployed):', err);
+      return {};
+    });
 }
 
 const root = document.getElementById('root');
@@ -24,11 +28,13 @@ loadAmplifyConfig().then((outputs) => {
   Amplify.configure(outputs as Parameters<typeof Amplify.configure>[0]);
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
-      <AuthProvider {...cognitoAuthConfig}>
-        <AuthGate>
-          <App />
-        </AuthGate>
-      </AuthProvider>
+      <ErrorBoundary>
+        <AuthProvider {...cognitoAuthConfig}>
+          <AuthGate>
+            <App />
+          </AuthGate>
+        </AuthProvider>
+      </ErrorBoundary>
     </React.StrictMode>
   );
 });

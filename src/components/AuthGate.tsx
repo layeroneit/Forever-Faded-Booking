@@ -16,12 +16,29 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   }
 
   if (auth.error) {
+    // Show full error: OIDC can return Error or object with error_description
+    const err = auth.error;
+    const message =
+      typeof err === 'object' && err !== null && 'message' in err
+        ? String((err as Error).message)
+        : '';
+    const desc =
+      typeof err === 'object' && err !== null && 'error_description' in err
+        ? String((err as { error_description?: string }).error_description)
+        : '';
+    const code =
+      typeof err === 'object' && err !== null && 'error' in err
+        ? String((err as { error?: string }).error)
+        : '';
+    const display = [message, desc, code].filter(Boolean).join(' — ') || JSON.stringify(err);
+
     return (
       <div className="login-page">
         <div className="login-card">
           <AuthHeader />
-          <div className="login-error">
-            Error: {auth.error.message}
+          <div className="login-error" role="alert">
+            <strong>Sign-in error</strong>
+            <p style={{ marginTop: '0.5rem', marginBottom: 0 }}>{display}</p>
           </div>
           <button
             type="button"

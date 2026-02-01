@@ -1,0 +1,64 @@
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--ff-black);
+}
+
+.error-boundary-card {
+  max-width: 560px;
+  width: 100%;
+  background: var(--ff-card);
+  border: 1px solid var(--ff-border-red);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.error-boundary-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  color: var(--ff-red-light);
+  margin-bottom: 0.5rem;
+}
+
+.error-boundary-subtitle {
+  font-size: 0.9rem;
+  color: var(--ff-gray);
+  margin-bottom: 0.75rem;
+}
+
+.error-boundary-message {
+  padding: 1rem;
+  background: rgba(185, 28, 28, 0.12);
+  border: 1px solid var(--ff-border-red);
+  border-radius: 8px;
+  color: #fca5a5;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.error-boundary-details {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+
+.error-boundary-details summary {
+  cursor: pointer;
+  color: var(--ff-gold);
+}
+
+.error-boundary-stack {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  overflow: auto;
+  max-height: 200px;
+  font-size: 0.75rem;
+  color: var(--ff-gray);
+  white-space: pre-wrap;
+  word-break: break-all;
+}

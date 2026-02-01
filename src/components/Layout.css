@@ -222,6 +222,20 @@
   margin-left: 0;
 }
 
+.layout-api-error {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: rgba(185, 28, 28, 0.15);
+  border: 1px solid var(--ff-border-red);
+  border-radius: 8px;
+  color: #fca5a5;
+  font-size: 0.875rem;
+}
+
+.layout-api-error:empty {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .layout-sidebar {
     transform: translateX(-100%);

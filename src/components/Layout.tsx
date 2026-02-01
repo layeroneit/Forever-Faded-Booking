@@ -84,6 +84,7 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [profile, setProfile] = useState<Schema['UserProfile']['type'] | null>(null);
   const [locationName, setLocationName] = useState<string | null>(null);
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   const email = (auth.user?.profile?.email as string) ?? '';
   const userId = (auth.user?.profile?.sub as string) ?? '';
@@ -107,21 +108,30 @@ export default function Layout() {
 
   useEffect(() => {
     if (!userId) return;
+    setProfileError(null);
     let cancelled = false;
     (async () => {
       try {
         const { data: profiles } = await client.models.UserProfile.list();
+        if (cancelled) return;
         const mine = (profiles ?? []).find((p) => p.userId === userId);
-        if (!cancelled && mine) {
+        if (mine) {
           setProfile(mine as Schema['UserProfile']['type']);
           if (mine.locationId) {
             const { data: locs } = await client.models.Location.list();
+            if (cancelled) return;
             const loc = (locs ?? []).find((l) => l.id === mine.locationId);
             if (loc) setLocationName(loc.name);
           }
+        } else {
+          setProfile(null);
         }
-      } catch {
-        if (!cancelled) setProfile(null);
+      } catch (e) {
+        if (!cancelled) {
+          setProfile(null);
+          const msg = e instanceof Error ? e.message : String(e);
+          setProfileError(msg || 'Failed to load profile');
+        }
       }
     })();
     return () => {
@@ -190,6 +200,11 @@ export default function Layout() {
       </aside>
 
       <main className={`layout-main ${sidebarOpen ? '' : 'full'}`}>
+        {profileError && (
+          <div className="layout-api-error" role="alert">
+            {profileError}
+          </div>
+        )}
         <Outlet />
       </main>
     </div>
