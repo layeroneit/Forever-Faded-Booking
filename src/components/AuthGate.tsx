@@ -16,6 +16,9 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   }
 
   if (auth.error) {
+    // Log so you can see the full error in DevTools → Console
+    console.error('[FOREVER FADED DEBUG] auth.error:', auth.error);
+
     // Show full error: OIDC can return Error or object with error_description
     const err = auth.error;
     const message =

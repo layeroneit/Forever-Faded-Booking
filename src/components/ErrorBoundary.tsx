@@ -23,7 +23,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState((s) => ({ ...s, errorInfo }));
-    console.error('ErrorBoundary caught:', error, errorInfo);
+    console.error('[FOREVER FADED DEBUG] ErrorBoundary caught:', error.message, error.stack, errorInfo);
   }
 
   render() {
@@ -35,11 +35,10 @@ export default class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="error-boundary">
           <div className="error-boundary-card">
-            <h1 className="error-boundary-title">Something went wrong</h1>
-            <p className="error-boundary-subtitle">Here’s what happened:</p>
-            <div className="error-boundary-message" role="alert">
+            <p className="error-boundary-subtitle">Something went wrong — cause:</p>
+            <h1 className="error-boundary-title" role="alert">
               {message}
-            </div>
+            </h1>
             {stack && (
               <details className="error-boundary-details">
                 <summary>Technical details</summary>
