@@ -44,9 +44,17 @@
 body {
   font-family: 'Inter', -apple-system, sans-serif;
   background: var(--ff-bg);
-  color: var(--ff-white);
+  color: #ffffff;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Override Amplify UI dark text — ensure readable white/light text in auth portal */
+.auth-portal-theme [data-amplify-authenticator] {
+  --amplify-components-fieldcontrol-color: #ffffff;
+  --amplify-components-text-color: #ffffff;
+  --amplify-components-heading-color: #ffffff;
+  --amplify-colors-font-primary: #ffffff;
 }
 
 a {

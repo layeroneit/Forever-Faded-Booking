@@ -3,25 +3,21 @@
  * Loaded after Amplify UI styles so overrides take effect.
  */
 
+/* Logo as background for testing — covers full viewport */
 .auth-portal-theme {
   min-height: 100vh;
-  background: #0a0a0a;
+  background: #0a0a0a url('/logo.png') no-repeat center center;
+  background-size: cover;
   position: relative;
   overflow: hidden;
 }
 
-/* Golden wavy lines at top (matches logo image) */
+/* Dark overlay so auth card stays readable */
 .auth-portal-theme::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 45%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' fill='none'%3E%3Cpath d='M0 120 Q150 40 300 120 T600 120 T900 120 T1200 120' stroke='%23c9a227' stroke-width='2' fill='none' opacity='0.25'/%3E%3Cpath d='M0 140 Q200 60 400 140 T800 140 T1200 140' stroke='%23c9a227' stroke-width='1.5' fill='none' opacity='0.18'/%3E%3Cpath d='M0 100 Q120 160 240 100 T480 100 T720 100 T960 100 T1200 100' stroke='%23c9a227' stroke-width='1' fill='none' opacity='0.15'/%3E%3Cpath d='M0 180 Q100 220 200 180 T400 180 T600 180 T800 180 T1000 180 T1200 180' stroke='%23c9a227' stroke-width='1' fill='none' opacity='0.12'/%3E%3C/svg%3E");
-  background-size: 1200px 300px;
-  background-repeat: repeat-x;
-  background-position: 0 0;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.75);
   pointer-events: none;
 }
 
@@ -115,4 +111,27 @@
 /* Sign out / secondary actions */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="link"] {
   color: #c9a227 !important;
+}
+
+/* Force white/light text — override any dark blue or dark Amplify defaults */
+.auth-portal-theme [data-amplify-authenticator] span,
+.auth-portal-theme [data-amplify-authenticator] p,
+.auth-portal-theme [data-amplify-authenticator] div,
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-flex],
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-text],
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-heading] {
+  color: inherit;
+}
+
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-router],
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-form] {
+  color: #ffffff !important;
+}
+
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-tabs-item][data-state="inactive"] {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.auth-portal-theme [data-amplify-authenticator] ::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
 }

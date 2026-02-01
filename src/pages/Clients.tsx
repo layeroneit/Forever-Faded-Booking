@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { BookUser } from 'lucide-react';
@@ -10,16 +11,44 @@ export default function Clients() {
   const [appointments, setAppointments] = useState<Schema['Appointment']['type'][]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [myProfile, setMyProfile] = useState<Schema['UserProfile']['type'] | null>(null);
 
   useEffect(() => {
-    Promise.all([client.models.UserProfile.list(), client.models.Appointment.list()])
-      .then(([profRes, aptRes]) => {
-        const clients = (profRes.data ?? []).filter((p) => p.role === 'client') as Schema['UserProfile']['type'][];
-        setProfiles(clients);
-        setAppointments(aptRes.data ?? []);
-      })
-      .catch((e) => setError(e instanceof Error ? e.message : 'Failed to load'))
-      .finally(() => setLoading(false));
+    let cancelled = false;
+    (async () => {
+      try {
+        const userId = (await getCurrentUser()).userId;
+        const [profRes, aptRes] = await Promise.all([
+          client.models.UserProfile.list(),
+          client.models.Appointment.list(),
+        ]);
+        if (cancelled) return;
+        const allProfiles = profRes.data ?? [];
+        const myProf = allProfiles.find((p) => p.userId === userId) as Schema['UserProfile']['type'] | undefined;
+        setMyProfile(myProf ?? null);
+
+        const allApts = aptRes.data ?? [];
+        let clientProfiles = (allProfiles.filter((p) => p.role === 'client') ?? []) as Schema['UserProfile']['type'][];
+
+        if (myProf?.role === 'barber') {
+          const myBarberProfileId = myProf.id;
+          const myClientIds = new Set(
+            allApts.filter((a) => a.barberId === myBarberProfileId).map((a) => a.clientId)
+          );
+          clientProfiles = clientProfiles.filter((p) => myClientIds.has(p.userId));
+        }
+
+        setProfiles(clientProfiles);
+        setAppointments(allApts);
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to load');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (loading) return <div className="page-loading">Loading clients…</div>;
@@ -32,10 +61,14 @@ export default function Clients() {
     return acc;
   }, {});
 
+  const isBarber = myProfile?.role === 'barber';
+
   return (
     <div>
-      <h1 className="page-title">Clients</h1>
-      <p className="page-subtitle">Client list.</p>
+      <h1 className="page-title">{isBarber ? 'My Clients' : 'Clients'}</h1>
+      <p className="page-subtitle">
+        {isBarber ? 'Clients who have booked with you.' : 'All clients.'}
+      </p>
       {profiles.length === 0 && <p>No clients yet. Clients appear after they sign up and have a UserProfile with role client.</p>}
       <ul style={{ listStyle: 'none', padding: 0 }}>
         {profiles.map((p) => {

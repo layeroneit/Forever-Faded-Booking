@@ -20,14 +20,19 @@ export default function Appointments() {
       .catch(() => setUserId(''));
   }, [user]);
 
+  const [myProfile, setMyProfile] = useState<Schema['UserProfile']['type'] | null>(null);
+
   useEffect(() => {
     if (!userId) return;
     let cancelled = false;
     (async () => {
       try {
         const { data: profiles } = await client.models.UserProfile.list();
-        const mine = (profiles ?? []).find((p) => p.userId === userId);
-        if (!cancelled && mine) setRole(mine.role ?? 'client');
+        const mine = (profiles ?? []).find((p) => p.userId === userId) as Schema['UserProfile']['type'] | undefined;
+        if (!cancelled) {
+          setMyProfile(mine ?? null);
+          setRole(mine?.role ?? 'client');
+        }
       } catch {
         if (!cancelled) setRole('client');
       }
@@ -45,22 +50,26 @@ export default function Appointments() {
     client.models.Appointment.list()
       .then((res) => {
         const list = res.data ?? [];
-        const filtered =
-          role === 'client' && userId
-            ? list.filter((a) => a.clientId === userId)
-            : list;
+        let filtered = list;
+        if (role === 'client' && userId) {
+          filtered = list.filter((a) => a.clientId === userId);
+        } else if (role === 'barber' && myProfile?.id) {
+          filtered = list.filter((a) => a.barberId === myProfile.id);
+        }
         setAppointments(filtered);
       })
       .catch(() => setAppointments([]))
       .finally(() => setLoading(false));
-  }, [userId, role]);
+  }, [userId, role, myProfile?.id]);
 
   if (loading) return <div className="page-loading">Loading appointments…</div>;
 
   return (
     <div>
       <h1 className="page-title">Appointments</h1>
-      <p className="page-subtitle">{role === 'client' ? 'Your bookings.' : 'All appointments.'}</p>
+      <p className="page-subtitle">
+        {role === 'client' ? 'Your bookings.' : role === 'barber' ? 'Appointments with your clients.' : 'All appointments.'}
+      </p>
       {appointments.length === 0 && <p className="page-subtitle" style={{ marginBottom: 0 }}>No appointments yet.</p>}
       {appointments.length > 0 && (
         <ul className="page-card-list">

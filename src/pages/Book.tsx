@@ -221,6 +221,22 @@ export default function Book() {
   if (loading) return <div className="page-loading">Loading…</div>;
   if (error && step === 1) return <div className="page-error">{error}</div>;
 
+  if (locations.length === 0) {
+    return (
+      <div className="book-page">
+        <h1 className="page-title">Book Appointment</h1>
+        <div className="login-success" style={{ marginTop: '1rem' }}>
+          <p style={{ marginBottom: '0.5rem' }}>
+            <strong>No locations or services yet.</strong> The business owner needs to complete setup first.
+          </p>
+          <p style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+            If you&apos;re the owner: sign in, create your UserProfile in Amplify Console with role <code>owner</code> (see Profile page for your User ID), then go to Dashboard and click &quot;Seed location &amp; services&quot;.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (bookingSuccess) {
     return (
       <div className="book-page">
