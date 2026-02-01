@@ -32,7 +32,7 @@ npm audit fix --force
 npm install
 ```
 
-Then run the sandbox again. Updated **@aws-amplify/backend** and **@aws-amplify/backend-cli** to **^1.16.0** in this project to reduce module-not-found and compatibility issues.
+Then run the sandbox again. This project uses **@aws-amplify/backend** ^1.16.0 and **@aws-amplify/backend-cli** ^1.8.0 (backend-cli has no 1.16.x on npm; latest is 1.8.x).
 
 ## 3. Install dependencies (clean)
 
@@ -52,9 +52,9 @@ npx ampx sandbox --debug
 
 Note the **first line** that mentions a missing path (e.g. `Cannot find module '...'`). That tells you whether the problem is in the Amplify CLI, your `backend.ts`, or a dependency.
 
-## 5. Node version — use Node 20 LTS (not Node 24)
+## 5. Node version — use Node 20
 
-If you see:
+This project uses **Node.js 20 LTS** (see `.nvmrc`). If you use Node 22 or 24 you may see:
 
 ```text
 Error: Cannot find package '...\node_modules\@aws-amplify\graphql-schema-generator\lib\index.js'
@@ -62,29 +62,29 @@ imported from ...\@aws-amplify\schema-generator\lib\generate_schema.js
 code: 'ERR_MODULE_NOT_FOUND'
 ```
 
-**Cause:** Node.js **24** uses stricter ESM resolution. The Amplify sandbox (and `@aws-amplify/graphql-schema-generator`) are not yet compatible with Node 24.
+**Cause:** The published `@aws-amplify/graphql-schema-generator` package points to `lib/index.js` but that file is missing or not resolved correctly on Node 22. The sandbox works on **Node 20**.
 
-**Fix:** Use **Node 20 LTS** (or Node 18 LTS) when running the sandbox:
+**Fix:** Use **Node 20** when running the sandbox:
 
 1. **Check your version:**
    ```bash
    node -v
    ```
-   If you see `v24.x.x`, switch to Node 20.
+   You need `v20.x.x` for the sandbox. If you see `v22.x.x` or `v24.x.x`, switch to Node 20 for this project.
 
 2. **Switch to Node 20:**
    - **nvm (Windows):** `nvm install 20` then `nvm use 20`
    - **nvm-windows:** [nvm-windows](https://github.com/coreybutler/nvm-windows) — `nvm install 20` then `nvm use 20`
-   - **Direct install:** Download **Node 20 LTS** from [nodejs.org](https://nodejs.org) and install it, then use that for this project.
+   - **Direct install:** Download **Node 20 LTS** from [nodejs.org](https://nodejs.org) and use it when running the sandbox.
 
-3. **Reinstall and run sandbox:**
+3. **Reinstall and run sandbox (from project root):**
    ```bash
    Remove-Item -Recurse -Force node_modules; Remove-Item package-lock.json
    npm install
    npx ampx sandbox
    ```
 
-For other issues, use **Node.js 18 or 20** (LTS). Avoid Node 24 for `npx ampx sandbox` until Amplify supports it.
+This project is set up for **Node 20** (`.nvmrc`). Run `nvm use 20` in the project folder so dev, build, and sandbox all use Node 20.
 
 ## 6. Exclude `amplify` from root TypeScript
 

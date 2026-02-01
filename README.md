@@ -13,7 +13,7 @@ Barbershop booking and management app built for **AWS Amplify Gen 2** (TypeScrip
 
 ## Prerequisites
 
-- **Node.js 20 LTS** (or 18 LTS) — **not Node 24**; the Amplify sandbox fails on Node 24 with `graphql-schema-generator` module errors. Use [nvm](https://github.com/nvm-sh/nvm) or [nvm-windows](https://github.com/coreybutler/nvm-windows): `nvm use 20` (see [SANDBOX.md](./SANDBOX.md)).
+- **Node.js 20 LTS** (see `.nvmrc`). Use [nvm](https://github.com/nvm-sh/nvm) or [nvm-windows](https://github.com/coreybutler/nvm-windows): `nvm use 20`. See [SANDBOX.md](./SANDBOX.md) if the sandbox fails.
 - npm
 - AWS account (for Amplify sandbox / deploy)
 
@@ -34,7 +34,7 @@ This deploys the Amplify backend (Auth + Data) and generates `amplify_outputs.js
 
 If you see **`ERR_MODULE_NOT_FOUND`** or **module not found**, see **[SANDBOX.md](./SANDBOX.md)** for troubleshooting.
 
-If **`npm install`** reports **critical vulnerabilities**, run `npm run audit:fix` (or `npm audit fix`), then `npm install` again. The project uses **@aws-amplify/backend** and **@aws-amplify/backend-cli** ^1.16.0 for sandbox compatibility.
+If **`npm install`** reports **critical vulnerabilities**, run `npm run audit:fix` (or `npm audit fix`), then `npm install` again. The project uses **@aws-amplify/backend** ^1.16.0 and **@aws-amplify/backend-cli** ^1.8.0 for the sandbox.
 
 ### 2. Run the frontend
 
@@ -75,7 +75,7 @@ Set in Amplify: `MAIL_FROM` (verified SES identity). See **[EMAIL.md](./EMAIL.md
 
 1. Push this repo to GitHub (or connect Amplify to your repo).
 2. In **AWS Amplify Console** → Create app → Host web app → connect repo and branch.
-3. **Build:** The repo includes `amplify.yml` — preBuild: `npm ci`, build: `npm run build`, artifacts: `dist`. Use Node 18+ (set in Amplify build settings or use `engines` in package.json).
+3. **Build:** The repo includes `amplify.yml` — preBuild: `npm install`, build: `npm run build`, artifacts: `dist`. Use **Node 20** (or 18) in Amplify build settings. If the build fails with "Command failed with exit code 1", see **[BUILD.md](./BUILD.md)**.
 4. **SPA routing:** In Amplify Console → App settings → Rewrites and redirects → add: source `</^[^.]+$|\.(?!js|css|gif|jpg|jpeg|png|svg|ico|woff|woff2|ttf|eot)$/>`, target `/index.html`, type **200 (Rewrite)**.
 5. **Backend:** Deploy the Amplify Gen 2 backend (Auth + Data + Lambdas) via `npx ampx sandbox` or pipeline; ensure `amplify_outputs.json` is available at build time (Amplify injects it when backend is deployed first).
 6. Set environment variables (see STRIPE.md, EMAIL.md).
