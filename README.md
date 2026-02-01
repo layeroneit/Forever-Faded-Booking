@@ -48,23 +48,21 @@ Or use the Amplify Data client in the app to create locations and services.
 
 ## Stripe integration
 
-To add Stripe (create payment intent, webhook):
+The **Book** page supports pay-now via Stripe. Custom mutations are wired in `amplify/data/resource.ts`:
 
-1. **Lambda:** Use the handlers in `amplify/functions/create-payment-intent/` and add a webhook function. Register them in `amplify/backend.ts` and expose via custom queries/mutations in `amplify/data/resource.ts`.
-2. **Secrets:** Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` in Amplify (Environment variables / Secrets).
-3. **Frontend:** Use Stripe.js and call your custom mutation to get `clientSecret`, then confirm payment.
+- **`createPaymentIntent`** — arguments: `appointmentId`, `amountCents` (optional). Returns `clientSecret` and `paymentIntentId` for Stripe Elements.
 
-See [forever-faded-platform/server/src/routes/payments.js](https://github.com/layeroneit/forever-faded-platform/blob/main/server/src/routes/payments.js) for the original logic to port.
+Set **backend** env in Amplify: `STRIPE_SECRET_KEY` (starts with `sk_`). Set **frontend** env: `VITE_STRIPE_PUBLISHABLE_KEY` (e.g. in `.env` and in Amplify Hosting env).
+
+See **[STRIPE.md](./STRIPE.md)** for full setup and test cards.
 
 ## Email integration
 
-To send booking confirmation emails:
+The **send-email** Lambda is exposed as a custom mutation:
 
-1. **Lambda:** Use `amplify/functions/send-email/` (SES) or add SMTP via a Lambda layer. Register in `amplify/backend.ts` and expose via a custom mutation.
-2. **SES:** Verify your sending domain/address in AWS SES and set `MAIL_FROM` in the function environment.
-3. **Trigger:** After creating an appointment, call the send-email mutation from the frontend or via a Data custom mutation resolver.
+- **`sendEmail`** — arguments: `to`, `subject`, `text`. Returns `{ sent, error? }`. Uses AWS SES.
 
-See [forever-faded-platform/server/src/lib/email.js](https://github.com/layeroneit/forever-faded-platform/blob/main/server/src/lib/email.js) for the original logic.
+Set in Amplify: `MAIL_FROM` (verified SES identity). See **[EMAIL.md](./EMAIL.md)** for SES setup.
 
 ## Deploy to Amplify Hosting
 

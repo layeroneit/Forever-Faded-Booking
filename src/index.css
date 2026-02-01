@@ -1,21 +1,44 @@
+/* Forever Faded — brand colors (from forever-faded-platform) */
 :root {
+  --ff-black: #0a0a0a;
   --ff-gold: #d4af37;
+  --ff-gold-light: #e8c547;
+  --ff-white: #ffffff;
+  --ff-red: #dc2626;
+  --ff-blue: #2563eb;
+  --ff-gray: rgba(255, 255, 255, 0.6);
+  --ff-bg: #0a0a0a;
+  --ff-card: rgba(26, 26, 26, 0.95);
+  --ff-border: rgba(212, 175, 55, 0.3);
   --ff-fg: #1a1a1a;
-  --ff-gray: #6b7280;
-  --ff-border: #e5e7eb;
-  --ff-card: #ffffff;
 }
 
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--ff-bg);
+  color: var(--ff-white);
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  background: #f9fafb;
-  color: var(--ff-fg);
+}
+
+a {
+  color: var(--ff-gold);
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, select, textarea {
+  font-family: inherit;
 }
 
 .page-loading,
@@ -25,7 +48,7 @@ body {
 }
 
 .page-error {
-  color: #dc2626;
+  color: #fca5a5;
 }
 
 .page-title {
@@ -37,4 +60,27 @@ body {
 .page-subtitle {
   color: var(--ff-gray);
   margin-bottom: 1.5rem;
+}
+
+/* Override Amplify Authenticator to match Forever Faded theme */
+[data-amplify-authenticator] {
+  --amplify-colors-background-primary: var(--ff-bg);
+  --amplify-colors-background-secondary: var(--ff-card);
+  --amplify-colors-border-primary: var(--ff-border);
+  --amplify-colors-font-primary: var(--ff-white);
+  --amplify-colors-font-secondary: var(--ff-gray);
+  --amplify-colors-brand-primary-80: var(--ff-gold);
+  --amplify-colors-brand-primary-90: var(--ff-gold-light);
+  --amplify-colors-brand-primary-100: var(--ff-gold);
+}
+[data-amplify-authenticator] [data-amplify-form] {
+  background: var(--ff-card);
+  border: 1px solid var(--ff-border);
+  border-radius: 16px;
+  padding: 2rem;
+}
+[data-amplify-authenticator] button[type="submit"] {
+  background: linear-gradient(135deg, var(--ff-gold), var(--ff-gold-light)) !important;
+  color: var(--ff-black) !important;
+  font-weight: 700;
 }
