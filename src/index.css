@@ -1,16 +1,38 @@
-/* Forever Faded — brand colors (from forever-faded-platform) */
+/* Forever Faded — Gold, Black, Blue & Red (matches logo) */
 :root {
   --ff-black: #0a0a0a;
-  --ff-gold: #d4af37;
-  --ff-gold-light: #e8c547;
+  --ff-black-soft: #111111;
+  --ff-black-card: #161616;
+  --ff-gold: #c9a227;
+  --ff-gold-light: #e5c158;
+  --ff-gold-dim: rgba(201, 162, 39, 0.5);
   --ff-white: #ffffff;
-  --ff-red: #dc2626;
-  --ff-blue: #2563eb;
+  --ff-blue: #1e5aa8;
+  --ff-blue-light: #2563eb;
+  --ff-red: #b91c1c;
+  --ff-red-light: #dc2626;
   --ff-gray: rgba(255, 255, 255, 0.6);
+  --ff-gray-dim: rgba(255, 255, 255, 0.4);
   --ff-bg: #0a0a0a;
-  --ff-card: rgba(26, 26, 26, 0.95);
-  --ff-border: rgba(212, 175, 55, 0.3);
-  --ff-fg: #1a1a1a;
+  --ff-card: rgba(22, 22, 22, 0.98);
+  --ff-border: rgba(201, 162, 39, 0.35);
+  --ff-border-blue: rgba(30, 90, 168, 0.4);
+  --ff-border-red: rgba(185, 28, 28, 0.4);
+}
+
+.ff-bg-waves {
+  position: relative;
+  overflow: hidden;
+}
+.ff-bg-waves::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120' fill='none' opacity='0.08'%3E%3Cpath d='M0 60 Q50 20 100 60 T200 60 T300 60 T400 60' stroke='%23c9a227' stroke-width='1.5' fill='none'/%3E%3Cpath d='M0 70 Q80 30 160 70 T320 70' stroke='%23c9a227' stroke-width='1' fill='none'/%3E%3Cpath d='M0 50 Q60 80 120 50 T240 50 T360 50' stroke='%23c9a227' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+  background-size: 400px 120px;
+  background-repeat: repeat-x;
+  background-position: 0 0;
+  pointer-events: none;
 }
 
 * {
@@ -52,11 +74,12 @@ input, select, textarea {
 }
 
 .page-title {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
   color: var(--ff-gold);
   margin-bottom: 0.25rem;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
 }
 
 .page-subtitle {
@@ -65,7 +88,6 @@ input, select, textarea {
   font-size: 1rem;
 }
 
-/* List / card panels (Appointments, etc.) */
 .page-card-list {
   list-style: none;
   padding: 0;
@@ -87,7 +109,14 @@ input, select, textarea {
   color: var(--ff-gold);
 }
 
-/* Shared buttons */
+.page-card-item .ff-accent-blue {
+  color: var(--ff-blue-light);
+}
+
+.page-card-item .ff-accent-red {
+  color: var(--ff-red-light);
+}
+
 .btn {
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
@@ -106,7 +135,7 @@ input, select, textarea {
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 6px 20px rgba(201, 162, 39, 0.35);
 }
 
 .btn-secondary {
@@ -116,10 +145,9 @@ input, select, textarea {
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(212, 175, 55, 0.1);
+  background: rgba(201, 162, 39, 0.12);
 }
 
-/* Override Amplify Authenticator to match brand */
 [data-amplify-authenticator] {
   --amplify-colors-background-primary: var(--ff-bg);
   --amplify-colors-background-secondary: var(--ff-card);
@@ -134,7 +162,7 @@ input, select, textarea {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: linear-gradient(135deg, var(--ff-black) 0%, #1a1a1a 100%);
+  background: var(--ff-bg);
 }
 [data-amplify-authenticator] [data-amplify-router] {
   width: 100%;

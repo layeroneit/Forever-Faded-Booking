@@ -139,37 +139,40 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="dashboard-page">
-      <h1 className="page-title">Dashboard</h1>
-      <p className="page-subtitle">Welcome back, {displayName || email}.</p>
+    <div className="dashboard-page ff-bg-waves">
+      <header className="dashboard-hero">
+        <h1 className="dashboard-hero-title">DASHBOARD</h1>
+        <p className="dashboard-hero-subtitle">Welcome back, {displayName || email}.</p>
+      </header>
 
       {isOwnerOrAdmin && stats && (
         <div className="dashboard-stats">
-          <div className="stat-card">
-            <div className="stat-icon"><Calendar size={24} /></div>
+          <div className="stat-card stat-card-gold">
+            <div className="stat-icon"><Calendar size={26} /></div>
             <div className="stat-value">{stats.completedToday}</div>
             <div className="stat-label">Completed Today</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-icon"><Calendar size={24} /></div>
+          <div className="stat-card stat-card-blue">
+            <div className="stat-icon"><Calendar size={26} /></div>
             <div className="stat-value">{stats.totalAppointments}</div>
             <div className="stat-label">Total Completed</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-icon"><DollarSign size={24} /></div>
+          <div className="stat-card stat-card-red">
+            <div className="stat-icon"><DollarSign size={26} /></div>
             <div className="stat-value">${(stats.totalRevenueCents / 100).toLocaleString()}</div>
             <div className="stat-label">Total Revenue</div>
           </div>
-          <Link to="/staff" className="stat-card stat-card-link">
-            <div className="stat-icon"><Users size={24} /></div>
+          <Link to="/staff" className="stat-card stat-card-link stat-card-gold">
+            <div className="stat-icon"><Users size={26} /></div>
             <div className="stat-value">{stats.staffCount}</div>
             <div className="stat-label">Staff</div>
           </Link>
         </div>
       )}
 
-      <div style={{ marginTop: '1.5rem' }}>
-        <p style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--ff-gray)' }}>
+      <section className="dashboard-tools">
+        <h2 className="dashboard-section">Setup</h2>
+        <p className="page-subtitle" style={{ marginBottom: '0.5rem' }}>
           Same location and services as the platform: Waukesha + Test Service, Face, Adults, Teens, Children, Seniors &amp; Military.
         </p>
         <button
@@ -181,11 +184,11 @@ export default function Dashboard() {
           {seeding ? 'Seeding…' : 'Seed location & services'}
         </button>
         {seedMessage && (
-          <p style={{ marginTop: '0.75rem', fontSize: '0.9rem' }}>{seedMessage}</p>
+          <p style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: 'var(--ff-gold)' }}>{seedMessage}</p>
         )}
-      </div>
+      </section>
 
-      <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--ff-gray)' }}>
+      <p className="dashboard-footer-note">
         Test users (sign up with these): see <strong>TEST-USERS.md</strong> — owner@foreverfaded.com, mike@foreverfaded.com, chris@foreverfaded.com, john@example.com (password: password123).
       </p>
     </div>

@@ -13,7 +13,7 @@ Barbershop booking and management app built for **AWS Amplify Gen 2** (TypeScrip
 
 ## Prerequisites
 
-- Node.js 18+
+- **Node.js 20 LTS** (or 18 LTS) — **not Node 24**; the Amplify sandbox fails on Node 24 with `graphql-schema-generator` module errors. Use [nvm](https://github.com/nvm-sh/nvm) or [nvm-windows](https://github.com/coreybutler/nvm-windows): `nvm use 20` (see [SANDBOX.md](./SANDBOX.md)).
 - npm
 - AWS account (for Amplify sandbox / deploy)
 
@@ -21,12 +21,20 @@ Barbershop booking and management app built for **AWS Amplify Gen 2** (TypeScrip
 
 ### 1. Install and run sandbox
 
+From the **project root** (where `package.json` and `amplify/` are):
+
 ```bash
 npm install
 npx ampx sandbox
 ```
 
+Or use the npm script: `npm run sandbox`.
+
 This deploys the Amplify backend (Auth + Data) and generates `amplify_outputs.json`. Keep the sandbox running in a terminal.
+
+If you see **`ERR_MODULE_NOT_FOUND`** or **module not found**, see **[SANDBOX.md](./SANDBOX.md)** for troubleshooting.
+
+If **`npm install`** reports **critical vulnerabilities**, run `npm run audit:fix` (or `npm audit fix`), then `npm install` again. The project uses **@aws-amplify/backend** and **@aws-amplify/backend-cli** ^1.16.0 for sandbox compatibility.
 
 ### 2. Run the frontend
 

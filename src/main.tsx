@@ -4,10 +4,17 @@ import { Amplify } from 'aws-amplify';
 import { Authenticator } from '@aws-amplify/ui-react';
 import ErrorBoundary from './components/ErrorBoundary';
 import AuthHeader from './components/AuthHeader';
+import AuthFooter from './components/AuthFooter';
 import './index.css';
 import './styles/Login.css';
 import './styles/Book.css';
 import '@aws-amplify/ui-react/styles.css';
+
+function isAuthConfigured(outputs: Record<string, unknown>): boolean {
+  const auth = outputs?.auth as { user_pool_id?: string } | undefined;
+  const id = auth?.user_pool_id ?? '';
+  return typeof id === 'string' && id.length > 0 && !id.includes('PLACEHOLDER');
+}
 
 // Load Amplify config (amplify_outputs.json) for Data API. Placeholder in repo; Amplify injects real one at build.
 function loadAmplifyConfig(): Promise<Record<string, unknown>> {
@@ -46,11 +53,43 @@ window.onunhandledrejection = (event) => {
 loadAmplifyConfig().then(async (outputs) => {
   Amplify.configure(outputs as Parameters<typeof Amplify.configure>[0]);
 
+  const authReady = isAuthConfigured(outputs);
   const { default: App } = await import('./App');
+
+  if (!authReady) {
+    ReactDOM.createRoot(root).render(
+      <React.StrictMode>
+        <ErrorBoundary>
+          <div className="auth-setup-page">
+            <div className="auth-setup-card">
+              <AuthHeader />
+              <h1>Backend not configured</h1>
+              <p>Run the Amplify sandbox to create the auth backend and get the 4 test users set up.</p>
+              <p>In the project folder, run:</p>
+              <code>npx ampx sandbox</code>
+              <p style={{ marginTop: '1rem' }}>
+                Then refresh this page. Use Sign up to create the 4 test accounts (see TEST-USERS.md), then sign in.
+              </p>
+            </div>
+          </div>
+        </ErrorBoundary>
+      </React.StrictMode>
+    );
+    return;
+  }
+
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
       <ErrorBoundary>
-        <Authenticator components={{ Header: AuthHeader }}>
+        <Authenticator
+          loginMechanisms={['email']}
+          signUpAttributes={['preferred_username']}
+          hideSignUp={false}
+          components={{
+            Header: AuthHeader,
+            Footer: AuthFooter,
+          }}
+        >
           <App />
         </Authenticator>
       </ErrorBoundary>

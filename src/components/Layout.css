@@ -1,8 +1,9 @@
-/* Forever Faded layout (from forever-faded-platform) */
+/* Forever Faded layout — Gold, Black, Blue & Red */
 .layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--ff-bg);
 }
 
 .layout-header {
@@ -16,6 +17,17 @@
   z-index: 50;
 }
 
+.layout-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ff-gold-dim), transparent);
+  opacity: 0.6;
+}
+
 .layout-menu-btn {
   background: none;
   border: none;
@@ -23,6 +35,11 @@
   padding: 0.5rem;
   margin-right: 0.5rem;
   cursor: pointer;
+  transition: color 0.2s;
+}
+
+.layout-menu-btn:hover {
+  color: var(--ff-gold-light);
 }
 
 .layout-logo {
@@ -36,13 +53,15 @@
 }
 
 .layout-logo-img {
-  height: 36px;
+  height: 40px;
   width: auto;
 }
 
 .layout-logo-text {
+  font-family: 'Bebas Neue', sans-serif;
   color: var(--ff-gold);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
 }
 
 .layout-logo-fallback {
@@ -63,7 +82,7 @@
   top: 56px;
   bottom: 0;
   width: 260px;
-  background: linear-gradient(180deg, #1a1a1a 0%, var(--ff-black) 100%);
+  background: linear-gradient(180deg, var(--ff-black-soft) 0%, var(--ff-black) 100%);
   border-right: 1px solid var(--ff-border);
   display: flex;
   flex-direction: column;
@@ -103,18 +122,22 @@
   color: var(--ff-white);
   border-radius: 8px;
   margin-bottom: 0.25rem;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s;
   text-decoration: none;
 }
 
 .layout-nav-link:hover {
-  background: rgba(212, 175, 55, 0.1);
+  background: rgba(201, 162, 39, 0.1);
 }
 
 .layout-nav-link.active {
-  background: rgba(212, 175, 55, 0.2);
+  background: rgba(201, 162, 39, 0.15);
   border-left: 3px solid var(--ff-gold);
   padding-left: calc(1rem - 3px);
+  color: var(--ff-gold);
+}
+
+.layout-nav-link.active svg {
   color: var(--ff-gold);
 }
 
@@ -142,13 +165,13 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--ff-gold), var(--ff-red));
+  background: linear-gradient(135deg, var(--ff-gold), var(--ff-blue));
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 0.9rem;
-  color: var(--ff-black);
+  color: var(--ff-white);
 }
 
 .layout-user-name {
@@ -175,13 +198,14 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
   cursor: pointer;
 }
 
 .layout-logout:hover {
-  background: rgba(220, 38, 38, 0.15);
+  background: rgba(185, 28, 28, 0.15);
   border-color: var(--ff-red);
+  color: #fca5a5;
 }
 
 .layout-main {
@@ -200,8 +224,8 @@
 .layout-api-error {
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
-  background: rgba(220, 38, 38, 0.15);
-  border: 1px solid var(--ff-red);
+  background: rgba(185, 28, 28, 0.15);
+  border: 1px solid var(--ff-border-red);
   border-radius: 8px;
   color: #fca5a5;
   font-size: 0.875rem;
