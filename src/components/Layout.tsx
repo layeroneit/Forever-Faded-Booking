@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { useAuthenticator } from '@aws-amplify/ui-react';
-import { getCurrentUser } from 'aws-amplify/auth';
+import { useAuth } from 'react-oidc-context';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import {
@@ -22,6 +21,7 @@ import {
   ClipboardList,
   BookUser,
 } from 'lucide-react';
+import { cognitoLogoutConfig } from '../config/cognito';
 import './Layout.css';
 
 const client = generateClient<Schema>();
@@ -79,13 +79,14 @@ const defaultNav = [
 ];
 
 export default function Layout() {
-  const { signOut, user } = useAuthenticator();
+  const auth = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [profile, setProfile] = useState<Schema['UserProfile']['type'] | null>(null);
   const [locationName, setLocationName] = useState<string | null>(null);
 
-  const email = user?.signInDetails?.loginId ?? '';
+  const email = (auth.user?.profile?.email as string) ?? '';
+  const userId = (auth.user?.profile?.sub as string) ?? '';
   const role = profile?.role ?? 'client';
   const displayName = profile?.name ?? email?.split('@')[0] ?? 'Account';
   const initials = displayName
@@ -96,11 +97,19 @@ export default function Layout() {
     .slice(0, 2) || '?';
   const links = navByRole[role] ?? defaultNav;
 
+  const handleSignOut = () => {
+    const { clientId, logoutUri, cognitoDomain } = cognitoLogoutConfig;
+    auth.removeUser();
+    if (cognitoDomain) {
+      window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+    }
+  };
+
   useEffect(() => {
+    if (!userId) return;
     let cancelled = false;
     (async () => {
       try {
-        const { userId } = await getCurrentUser();
         const { data: profiles } = await client.models.UserProfile.list();
         const mine = (profiles ?? []).find((p) => p.userId === userId);
         if (!cancelled && mine) {
@@ -118,7 +127,7 @@ export default function Layout() {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [userId]);
 
   return (
     <div className="layout">
@@ -133,7 +142,7 @@ export default function Layout() {
         </button>
         <Link to="/" className="layout-logo">
           <img
-            src="/logo.png"
+            src={`${import.meta.env.BASE_URL || '/'}logo.png`.replace(/\/+/g, '/')}
             alt="Forever Faded"
             className="layout-logo-img"
             onError={(e) => {
@@ -174,7 +183,7 @@ export default function Layout() {
               <div className="layout-user-role">{role}</div>
             </div>
           </div>
-          <button type="button" className="layout-logout" onClick={() => signOut()}>
+          <button type="button" className="layout-logout" onClick={handleSignOut}>
             <LogOut size={18} /> Logout
           </button>
         </div>
