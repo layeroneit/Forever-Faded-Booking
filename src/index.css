@@ -52,17 +52,20 @@ input, select, textarea {
 }
 
 .page-title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
+  color: var(--ff-gold);
   margin-bottom: 0.25rem;
+  letter-spacing: 0.02em;
 }
 
 .page-subtitle {
   color: var(--ff-gray);
   margin-bottom: 1.5rem;
+  font-size: 1rem;
 }
 
-/* Override Amplify Authenticator to match Forever Faded theme */
+/* Override Amplify Authenticator to match platform login (Forever Faded) */
 [data-amplify-authenticator] {
   --amplify-colors-background-primary: var(--ff-bg);
   --amplify-colors-background-secondary: var(--ff-card);
@@ -72,12 +75,27 @@ input, select, textarea {
   --amplify-colors-brand-primary-80: var(--ff-gold);
   --amplify-colors-brand-primary-90: var(--ff-gold-light);
   --amplify-colors-brand-primary-100: var(--ff-gold);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, var(--ff-black) 0%, #1a1a1a 100%);
 }
-[data-amplify-authenticator] [data-amplify-form] {
+[data-amplify-authenticator] [data-amplify-router] {
+  width: 100%;
+  max-width: 400px;
   background: var(--ff-card);
   border: 1px solid var(--ff-border);
   border-radius: 16px;
   padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+[data-amplify-authenticator] [data-amplify-form] {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
 }
 [data-amplify-authenticator] button[type="submit"] {
   background: linear-gradient(135deg, var(--ff-gold), var(--ff-gold-light)) !important;

@@ -148,7 +148,7 @@ export default function Layout() {
 
       <aside className={`layout-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="layout-sidebar-header">
-          <span className="layout-logo-text">FOREVER FADED</span>
+          <span className="layout-logo-text" style={{ letterSpacing: '0.05em' }}>FOREVER FADED</span>
           {locationName && (
             <p className="layout-location">
               <MapPin size={12} /> {locationName}
