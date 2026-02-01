@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "auth": {
+    "user_pool_id": "PLACEHOLDER_RUN_AMPX_SANDBOX",
+    "user_pool_client_id": "PLACEHOLDER",
+    "identity_pool_id": "PLACEHOLDER",
+    "aws_region": "us-east-1"
+  },
+  "data": {
+    "url": "https://PLACEHOLDER.appsync-api.us-east-1.amazonaws.com/graphql",
+    "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
+    "region": "us-east-1"
+  }
+}

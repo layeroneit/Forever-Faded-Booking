@@ -1,0 +1,40 @@
+:root {
+  --ff-gold: #d4af37;
+  --ff-fg: #1a1a1a;
+  --ff-gray: #6b7280;
+  --ff-border: #e5e7eb;
+  --ff-card: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: #f9fafb;
+  color: var(--ff-fg);
+}
+
+.page-loading,
+.page-error {
+  padding: 2rem;
+  text-align: center;
+}
+
+.page-error {
+  color: #dc2626;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: var(--ff-gray);
+  margin-bottom: 1.5rem;
+}
