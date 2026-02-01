@@ -36,15 +36,12 @@ npm run dev
 
 Open http://localhost:5173. Sign up / sign in with Cognito, then use Dashboard, Book, Appointments, Profile.
 
-### 3. Add seed data
+### 3. Add seed data and test users
 
-Use **Amplify Console** → your app → **Data** → **Data manager** to create:
+- **Same profiles and users as the platform:** Sign up with the test accounts in **[TEST-USERS.md](./TEST-USERS.md)** (e.g. `owner@foreverfaded.com` / `password123`, then create a UserProfile in Data manager with role `owner`).
+- **Location and services:** On the **Dashboard**, click **Seed location & services** to create the Waukesha location and the same service list as forever-faded-platform (Test Service $1, Face, Adults, Teens, Children, Seniors & Military).
 
-- **Location:** e.g. Forever Faded — Waukesha, 1427 E Racine Ave Suite H, Waukesha, WI 53186
-- **Service:** e.g. Test Service, category Test, duration 15 min, priceCents 100 ($1.00)
-- **UserProfile:** link to your Cognito user (userId = sub), role `client` or `owner`, name, email, phone
-
-Or use the Amplify Data client in the app to create locations and services.
+Or create Location, Service, and UserProfile manually in **Amplify Console** → **Data** → **Data manager**.
 
 ## Stripe integration
 
@@ -68,9 +65,10 @@ Set in Amplify: `MAIL_FROM` (verified SES identity). See **[EMAIL.md](./EMAIL.md
 
 1. Push this repo to GitHub (or connect Amplify to your repo).
 2. In **AWS Amplify Console** → Create app → Host web app → connect repo and branch.
-3. Build settings: use the default build (npm ci, npm run build). Output directory: `dist`.
-4. Add **rewrite:** source `</^[^.]+$|\.(?!js|css|gif|jpg|jpeg|png|svg|ico|woff|woff2|ttf|eot)$/>` → `/index.html`, type **200 (Rewrite)** for SPA routing.
-5. Deploy. The backend (Auth + Data) is deployed with the app when using Amplify Gen 2.
+3. **Build:** The repo includes `amplify.yml` — preBuild: `npm ci`, build: `npm run build`, artifacts: `dist`. Use Node 18+ (set in Amplify build settings or use `engines` in package.json).
+4. **SPA routing:** In Amplify Console → App settings → Rewrites and redirects → add: source `</^[^.]+$|\.(?!js|css|gif|jpg|jpeg|png|svg|ico|woff|woff2|ttf|eot)$/>`, target `/index.html`, type **200 (Rewrite)**.
+5. **Backend:** Deploy the Amplify Gen 2 backend (Auth + Data + Lambdas) via `npx ampx sandbox` or pipeline; ensure `amplify_outputs.json` is available at build time (Amplify injects it when backend is deployed first).
+6. Set environment variables (see STRIPE.md, EMAIL.md).
 
 ## Project structure
 

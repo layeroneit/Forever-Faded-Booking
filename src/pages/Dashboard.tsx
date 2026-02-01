@@ -1,14 +1,97 @@
+import { useState } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../../amplify/data/resource';
+import { SEED_LOCATION, SEED_SERVICES } from '../seed-data';
+
+const client = generateClient<Schema>();
 
 export default function Dashboard() {
   const { user } = useAuthenticator();
   const email = user?.signInDetails?.loginId ?? '';
+  const [seeding, setSeeding] = useState(false);
+  const [seedMessage, setSeedMessage] = useState('');
+
+  const runSeed = async () => {
+    setSeeding(true);
+    setSeedMessage('');
+    try {
+      const { data: locations } = await client.models.Location.list();
+      let locationId: string | undefined;
+      if (locations && locations.length > 0) {
+        locationId = (locations[0] as { id: string }).id;
+        setSeedMessage('Location already exists. Adding services…');
+      } else {
+        const { data: created } = await client.models.Location.create({
+          name: SEED_LOCATION.name,
+          address: SEED_LOCATION.address,
+          city: SEED_LOCATION.city,
+          state: SEED_LOCATION.state,
+          zip: SEED_LOCATION.zip,
+          phone: SEED_LOCATION.phone,
+          timezone: SEED_LOCATION.timezone,
+          isActive: SEED_LOCATION.isActive,
+        });
+        locationId = (created as { id: string })?.id;
+        setSeedMessage('Location created. Adding services…');
+      }
+
+      const { data: existingServices } = await client.models.Service.list();
+      const existingNames = new Set((existingServices ?? []).map((s) => s.name));
+      let added = 0;
+      for (const s of SEED_SERVICES) {
+        if (existingNames.has(s.name)) continue;
+        await client.models.Service.create({
+          locationId: undefined,
+          name: s.name,
+          category: s.category,
+          description: s.description ?? undefined,
+          durationMinutes: s.durationMinutes,
+          priceCents: s.priceCents,
+          isActive: true,
+        });
+        added++;
+      }
+      setSeedMessage(
+        added > 0
+          ? `Done. Location ready. ${added} new service(s) added.`
+          : locationId
+            ? 'Done. Location and all services already exist.'
+            : 'Location and services created.'
+      );
+    } catch (e) {
+      setSeedMessage(e instanceof Error ? e.message : 'Seed failed');
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   return (
     <div>
       <h1 className="page-title">Dashboard</h1>
       <p className="page-subtitle">Welcome, {email}.</p>
       <p>Forever Faded Booking — same features as forever-faded-platform, built for AWS Amplify Gen 2.</p>
+
+      <div style={{ marginTop: '1.5rem' }}>
+        <p style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--ff-gray)' }}>
+          Same location and services as the platform: Waukesha + Test Service, Face, Adults, Teens, Children, Seniors &amp; Military.
+        </p>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={seeding}
+          onClick={runSeed}
+        >
+          {seeding ? 'Seeding…' : 'Seed location & services'}
+        </button>
+        {seedMessage && (
+          <p style={{ marginTop: '0.75rem', fontSize: '0.9rem' }}>{seedMessage}</p>
+        )}
+      </div>
+
+      <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--ff-gray)' }}>
+        Test users (sign up with these): see <strong>TEST-USERS.md</strong> — owner@foreverfaded.com, mike@foreverfaded.com, chris@foreverfaded.com, john@example.com (password: password123).
+      </p>
     </div>
   );
 }
