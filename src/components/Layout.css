@@ -10,11 +10,13 @@
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
+  padding-top: calc(0.75rem + var(--safe-top));
   background: var(--ff-black);
   border-bottom: 1px solid var(--ff-border);
   position: sticky;
   top: 0;
   z-index: 50;
+  min-height: 56px;
 }
 
 .layout-header::after {
@@ -33,9 +35,14 @@
   border: none;
   color: var(--ff-gold);
   padding: 0.5rem;
-  margin-right: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  margin-right: 0.25rem;
   cursor: pointer;
   transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .layout-menu-btn:hover {
@@ -80,8 +87,10 @@
   position: fixed;
   left: 0;
   top: 56px;
+  top: calc(56px + var(--safe-top));
   bottom: 0;
-  width: 260px;
+  width: min(260px, 85vw);
+  max-width: 260px;
   background: linear-gradient(180deg, var(--ff-black-soft) 0%, var(--ff-black) 100%);
   border-right: 1px solid var(--ff-border);
   display: flex;
@@ -119,11 +128,13 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
+  min-height: 44px;
   color: var(--ff-white);
   border-radius: 8px;
   margin-bottom: 0.25rem;
   transition: background 0.2s, border-color 0.2s;
   text-decoration: none;
+  font-size: clamp(0.875rem, 2vw, 1rem);
 }
 
 .layout-nav-link:hover {
@@ -189,6 +200,7 @@
 .layout-logout {
   width: 100%;
   padding: 0.6rem;
+  min-height: 44px;
   background: transparent;
   border: 1px solid var(--ff-border);
   border-radius: 8px;
@@ -210,10 +222,15 @@
 
 .layout-main {
   flex: 1;
-  margin-left: 260px;
+  margin-left: min(260px, 85vw);
   margin-top: 56px;
+  margin-top: calc(56px + var(--safe-top));
   padding: 1.5rem;
+  padding-left: calc(1.5rem + var(--safe-left));
+  padding-right: calc(1.5rem + var(--safe-right));
+  padding-bottom: calc(1.5rem + var(--safe-bottom));
   min-height: calc(100vh - 56px);
+  min-height: calc(100dvh - 56px - var(--safe-top));
   transition: margin-left 0.2s;
 }
 
@@ -238,11 +255,29 @@
 @media (max-width: 768px) {
   .layout-sidebar {
     transform: translateX(-100%);
+    width: min(280px, 90vw);
   }
   .layout-sidebar.open {
     transform: translateX(0);
   }
   .layout-main {
     margin-left: 0;
+    padding: 1rem;
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    padding-bottom: calc(1rem + var(--safe-bottom));
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-header {
+    padding: 0.5rem 0.75rem;
+    padding-top: calc(0.5rem + var(--safe-top));
+  }
+  .layout-main {
+    padding: 0.75rem;
+    padding-left: calc(0.75rem + var(--safe-left));
+    padding-right: calc(0.75rem + var(--safe-right));
+    padding-bottom: calc(0.75rem + var(--safe-bottom));
   }
 }

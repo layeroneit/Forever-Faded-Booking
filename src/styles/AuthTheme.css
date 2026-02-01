@@ -3,25 +3,118 @@
  * Loaded after Amplify UI styles so overrides take effect.
  */
 
-/* Logo as background for testing — covers full viewport */
 .auth-portal-theme {
   min-height: 100vh;
-  background: #0a0a0a url('/logo.png') no-repeat center center;
-  background-size: cover;
+  min-height: 100dvh;
+  background: #0a0a0a;
   position: relative;
   overflow: hidden;
 }
 
-/* Dark overlay so auth card stays readable */
+/* Golden wavy accents */
 .auth-portal-theme::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: rgba(10, 10, 10, 0.75);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' fill='none'%3E%3Cpath d='M0 120 Q150 40 300 120 T600 120 T900 120 T1200 120' stroke='%23c9a227' stroke-width='2' fill='none' opacity='0.25'/%3E%3Cpath d='M0 140 Q200 60 400 140 T800 140 T1200 140' stroke='%23c9a227' stroke-width='1.5' fill='none' opacity='0.18'/%3E%3Cpath d='M0 100 Q120 160 240 100 T480 100 T720 100 T960 100 T1200 100' stroke='%23c9a227' stroke-width='1' fill='none' opacity='0.15'/%3E%3Cpath d='M0 180 Q100 220 200 180 T400 180 T600 180 T800 180 T1000 180 T1200 180' stroke='%23c9a227' stroke-width='1' fill='none' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 1200px 300px;
+  background-repeat: repeat-x;
+  background-position: 0 0;
   pointer-events: none;
 }
 
-/* Authenticator container — black background, centered */
+/* Split layout: logo left, sign-in right */
+.auth-portal-split {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 1.5rem;
+  padding-left: calc(1.5rem + env(safe-area-inset-left, 0px));
+  padding-right: calc(1.5rem + env(safe-area-inset-right, 0px));
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  gap: 2rem;
+}
+
+.auth-portal-left {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-portal-left img {
+  max-width: min(280px, 45vw);
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.auth-portal-left .auth-portal-brand {
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+.auth-portal-left .auth-portal-brand h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--ff-gold);
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+.auth-portal-left .auth-portal-brand p {
+  font-size: 0.75rem;
+  color: var(--ff-gray);
+  letter-spacing: 0.1em;
+  margin: 0.25rem 0 0;
+}
+
+.auth-portal-right {
+  flex: 1 1 auto;
+  max-width: min(420px, 100%);
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .auth-portal-split {
+    flex-direction: column;
+    padding: 1rem;
+    padding-left: calc(1rem + env(safe-area-inset-left, 0px));
+    padding-right: calc(1rem + env(safe-area-inset-right, 0px));
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    gap: 1rem;
+  }
+
+  .auth-portal-left img {
+    max-width: min(160px, 40vw);
+  }
+
+  .auth-portal-left .auth-portal-brand h1 {
+    font-size: clamp(1rem, 4vw, 1.25rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-portal-split {
+    padding: 0.75rem;
+    padding-left: calc(0.75rem + env(safe-area-inset-left, 0px));
+    padding-right: calc(0.75rem + env(safe-area-inset-right, 0px));
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .auth-portal-left img {
+    max-width: 140px;
+  }
+}
+
+/* Authenticator container — fits in right panel */
 .auth-portal-theme [data-amplify-authenticator] {
   --amplify-colors-background-primary: #0a0a0a;
   --amplify-colors-background-secondary: rgba(22, 22, 22, 0.98);
@@ -35,22 +128,22 @@
   --amplify-colors-brand-primary-90: #e5c158;
   --amplify-colors-brand-primary-100: #c9a227;
   --amplify-colors-brand-secondary-10: rgba(201, 162, 39, 0.1);
-  min-height: 100vh;
+  min-height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 0;
   background: transparent !important;
 }
 
 /* Auth card — dark with gold border */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-router] {
   width: 100%;
-  max-width: 420px;
+  max-width: min(420px, 100%);
   background: rgba(22, 22, 22, 0.98) !important;
   border: 1px solid rgba(201, 162, 39, 0.35);
   border-radius: 16px;
-  padding: 2rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
 }
 
@@ -59,12 +152,14 @@
   border: none;
 }
 
-/* Inputs — dark with gold accent */
+/* Inputs — dark with gold accent, min 16px prevents iOS zoom on focus */
 .auth-portal-theme [data-amplify-authenticator] input,
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-input] {
   background: rgba(10, 10, 10, 0.8) !important;
   border-color: rgba(201, 162, 39, 0.35) !important;
   color: #ffffff !important;
+  font-size: 16px !important;
+  min-height: 44px;
 }
 
 .auth-portal-theme [data-amplify-authenticator] input:focus,

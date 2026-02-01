@@ -83,17 +83,28 @@ loadAmplifyConfig().then(async (outputs) => {
     <React.StrictMode>
       <ErrorBoundary>
         <div className="auth-portal-theme">
-          <Authenticator
-            loginMechanisms={['email']}
-            signUpAttributes={['preferred_username']}
-            hideSignUp={false}
-            components={{
-              Header: AuthHeader,
-              Footer: AuthFooter,
-            }}
-          >
-            <App />
-          </Authenticator>
+          <div className="auth-portal-split">
+            <div className="auth-portal-left">
+              <img src={`${import.meta.env.BASE_URL || '/'}logo.png`.replace(/\/+/g, '/')} alt="Forever Faded" />
+              <div className="auth-portal-brand">
+                <h1>FOREVER FADED</h1>
+                <p>ESTD 2008 · For The Culture</p>
+              </div>
+            </div>
+            <div className="auth-portal-right">
+              <Authenticator
+                loginMechanisms={['email']}
+                signUpAttributes={['preferred_username']}
+                hideSignUp={false}
+                components={{
+                  Header: () => null,
+                  Footer: AuthFooter,
+                }}
+              >
+                <App />
+              </Authenticator>
+            </div>
+          </div>
         </div>
       </ErrorBoundary>
     </React.StrictMode>
