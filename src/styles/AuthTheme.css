@@ -1,0 +1,118 @@
+/**
+ * Forever Faded auth portal theme — black background, golden wavy accents.
+ * Loaded after Amplify UI styles so overrides take effect.
+ */
+
+.auth-portal-theme {
+  min-height: 100vh;
+  background: #0a0a0a;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Golden wavy lines at top (matches logo image) */
+.auth-portal-theme::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' fill='none'%3E%3Cpath d='M0 120 Q150 40 300 120 T600 120 T900 120 T1200 120' stroke='%23c9a227' stroke-width='2' fill='none' opacity='0.25'/%3E%3Cpath d='M0 140 Q200 60 400 140 T800 140 T1200 140' stroke='%23c9a227' stroke-width='1.5' fill='none' opacity='0.18'/%3E%3Cpath d='M0 100 Q120 160 240 100 T480 100 T720 100 T960 100 T1200 100' stroke='%23c9a227' stroke-width='1' fill='none' opacity='0.15'/%3E%3Cpath d='M0 180 Q100 220 200 180 T400 180 T600 180 T800 180 T1000 180 T1200 180' stroke='%23c9a227' stroke-width='1' fill='none' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 1200px 300px;
+  background-repeat: repeat-x;
+  background-position: 0 0;
+  pointer-events: none;
+}
+
+/* Authenticator container — black background, centered */
+.auth-portal-theme [data-amplify-authenticator] {
+  --amplify-colors-background-primary: #0a0a0a;
+  --amplify-colors-background-secondary: rgba(22, 22, 22, 0.98);
+  --amplify-colors-background-tertiary: #161616;
+  --amplify-colors-border-primary: rgba(201, 162, 39, 0.35);
+  --amplify-colors-border-secondary: rgba(201, 162, 39, 0.2);
+  --amplify-colors-font-primary: #ffffff;
+  --amplify-colors-font-secondary: rgba(255, 255, 255, 0.7);
+  --amplify-colors-font-tertiary: rgba(255, 255, 255, 0.5);
+  --amplify-colors-brand-primary-80: #c9a227;
+  --amplify-colors-brand-primary-90: #e5c158;
+  --amplify-colors-brand-primary-100: #c9a227;
+  --amplify-colors-brand-secondary-10: rgba(201, 162, 39, 0.1);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: transparent !important;
+}
+
+/* Auth card — dark with gold border */
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-router] {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(22, 22, 22, 0.98) !important;
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-form] {
+  background: transparent;
+  border: none;
+}
+
+/* Inputs — dark with gold accent */
+.auth-portal-theme [data-amplify-authenticator] input,
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-input] {
+  background: rgba(10, 10, 10, 0.8) !important;
+  border-color: rgba(201, 162, 39, 0.35) !important;
+  color: #ffffff !important;
+}
+
+.auth-portal-theme [data-amplify-authenticator] input:focus,
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-input]:focus {
+  border-color: #c9a227 !important;
+  box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.25) !important;
+}
+
+/* Labels */
+.auth-portal-theme [data-amplify-authenticator] label,
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-label] {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Primary submit button — gold gradient */
+.auth-portal-theme [data-amplify-authenticator] button[type="submit"],
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="primary"] {
+  background: linear-gradient(135deg, #c9a227, #e5c158) !important;
+  color: #0a0a0a !important;
+  font-weight: 700 !important;
+  border: none !important;
+}
+
+.auth-portal-theme [data-amplify-authenticator] button[type="submit"]:hover,
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="primary"]:hover {
+  background: linear-gradient(135deg, #e5c158, #c9a227) !important;
+}
+
+/* Secondary / tab buttons */
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-tabs] [data-state="active"] {
+  color: #c9a227 !important;
+  border-color: #c9a227 !important;
+}
+
+/* Links */
+.auth-portal-theme [data-amplify-authenticator] a {
+  color: #c9a227 !important;
+}
+
+.auth-portal-theme [data-amplify-authenticator] a:hover {
+  color: #e5c158 !important;
+}
+
+/* Sign out / secondary actions */
+.auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="link"] {
+  color: #c9a227 !important;
+}

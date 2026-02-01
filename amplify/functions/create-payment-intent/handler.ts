@@ -16,7 +16,7 @@ export const handler: Handler<CreatePaymentIntentEvent> = async (event) => {
   }
   try {
     const Stripe = (await import('stripe')).default;
-    const stripe = new Stripe(secretKey, { apiVersion: '2024-11-20.acacia' });
+    const stripe = new Stripe(secretKey, { apiVersion: '2023-10-16' });
     const amount = Math.max(50, amountCents ?? 100);
     const paymentIntent = await stripe.paymentIntents.create({
       amount,

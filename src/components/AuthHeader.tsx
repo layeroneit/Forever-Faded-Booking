@@ -15,7 +15,7 @@ export default function AuthHeader() {
         }}
       />
       <h1 className="login-title">FOREVER FADED</h1>
-      <p className="login-tagline">For The Culture</p>
+      <p className="login-tagline">ESTD 2008 · For The Culture</p>
     </div>
   );
 }
