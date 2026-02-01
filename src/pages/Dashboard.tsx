@@ -1,16 +1,81 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { SEED_LOCATION, SEED_SERVICES } from '../seed-data';
+import { Calendar, DollarSign, Users } from 'lucide-react';
+import '../styles/Dashboard.css';
 
 const client = generateClient<Schema>();
+
+type Stats = {
+  completedToday: number;
+  totalAppointments: number;
+  totalRevenueCents: number;
+  staffCount: number;
+};
 
 export default function Dashboard() {
   const { user } = useAuthenticator();
   const email = user?.signInDetails?.loginId ?? '';
+  const [profile, setProfile] = useState<Schema['UserProfile']['type'] | null>(null);
+  const [stats, setStats] = useState<Stats | null>(null);
   const [seeding, setSeeding] = useState(false);
   const [seedMessage, setSeedMessage] = useState('');
+
+  const role = profile?.role ?? 'client';
+  const displayName = profile?.name ?? email?.split('@')[0] ?? '';
+  const isOwnerOrAdmin = role === 'owner' || role === 'admin' || role === 'manager';
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { userId } = await getCurrentUser();
+        const { data: profiles } = await client.models.UserProfile.list();
+        const mine = (profiles ?? []).find((p) => p.userId === userId);
+        if (!cancelled && mine) setProfile(mine as Schema['UserProfile']['type']);
+      } catch {
+        if (!cancelled) setProfile(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  useEffect(() => {
+    if (!isOwnerOrAdmin) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const [aptRes, profRes] = await Promise.all([
+          client.models.Appointment.list(),
+          client.models.UserProfile.list(),
+        ]);
+        if (cancelled) return;
+        const appointments = aptRes.data ?? [];
+        const completed = appointments.filter((a) => a.status === 'completed');
+        const today = new Date().toDateString();
+        const completedToday = completed.filter((a) => new Date(a.startAt).toDateString() === today).length;
+        const totalRevenueCents = completed.reduce((sum, a) => sum + (a.totalCents ?? 0) - (a.discountCents ?? 0), 0);
+        const staff = (profRes.data ?? []).filter((p) => ['barber', 'manager', 'owner', 'admin'].includes(p.role ?? ''));
+        setStats({
+          completedToday,
+          totalAppointments: completed.length,
+          totalRevenueCents,
+          staffCount: staff.length,
+        });
+      } catch {
+        if (!cancelled) setStats(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isOwnerOrAdmin]);
 
   const runSeed = async () => {
     setSeeding(true);
@@ -67,10 +132,34 @@ export default function Dashboard() {
   };
 
   return (
-    <div>
+    <div className="dashboard-page">
       <h1 className="page-title">Dashboard</h1>
-      <p className="page-subtitle">Welcome, {email}.</p>
-      <p>Forever Faded Booking — same features as forever-faded-platform, built for AWS Amplify Gen 2.</p>
+      <p className="page-subtitle">Welcome back, {displayName || email}.</p>
+
+      {isOwnerOrAdmin && stats && (
+        <div className="dashboard-stats">
+          <div className="stat-card">
+            <div className="stat-icon"><Calendar size={24} /></div>
+            <div className="stat-value">{stats.completedToday}</div>
+            <div className="stat-label">Completed Today</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon"><Calendar size={24} /></div>
+            <div className="stat-value">{stats.totalAppointments}</div>
+            <div className="stat-label">Total Completed</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon"><DollarSign size={24} /></div>
+            <div className="stat-value">${(stats.totalRevenueCents / 100).toLocaleString()}</div>
+            <div className="stat-label">Total Revenue</div>
+          </div>
+          <Link to="/staff" className="stat-card stat-card-link">
+            <div className="stat-icon"><Users size={24} /></div>
+            <div className="stat-value">{stats.staffCount}</div>
+            <div className="stat-label">Staff</div>
+          </Link>
+        </div>
+      )}
 
       <div style={{ marginTop: '1.5rem' }}>
         <p style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--ff-gray)' }}>

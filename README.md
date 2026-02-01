@@ -2,12 +2,14 @@
 
 Barbershop booking and management app built for **AWS Amplify Gen 2** (TypeScript-first, code-first backend). Same features as [forever-faded-platform](https://github.com/layeroneit/forever-faded-platform), including services, appointments, locations, Stripe and email integrations — compatible with Amplify Hosting.
 
-## Features (migrated from forever-faded-platform)
+## Features (aligned with forever-faded-platform)
 
-- **Auth:** Cognito (email/password) — replaces JWT
-- **Data:** Locations, Services, Appointments, UserProfile (role: client | barber | manager | owner | admin)
-- **Stripe:** Payment intents and webhooks — add via Lambda (see below)
-- **Email:** Booking confirmations — add via Lambda + SES (see below)
+- **Auth:** Cognito (email/password). Test users: see **TEST-USERS.md** (owner@foreverfaded.com, mike@foreverfaded.com, etc.; password: password123).
+- **Design:** Same brand (gold/dark theme), layout with role-based nav, sidebar toggle, logo with fallback, UserProfile (name, role, location).
+- **Data:** Locations, Services, Appointments, UserProfile (role: client | barber | manager | owner | admin).
+- **Pages:** Dashboard (with stats for owner/admin/manager), Book, Appointments (filtered by client when role=client), Profile, Locations, Services, Clients, Staff, Settings, Daily Cuts, Analytics, Schedule, Inventory, Payroll (placeholders where backend not yet implemented).
+- **Stripe:** Payment intents via Lambda; Book page pay-now flow.
+- **Email:** sendEmail mutation via Lambda + SES.
 
 ## Prerequisites
 

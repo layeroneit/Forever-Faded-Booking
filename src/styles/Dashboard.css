@@ -1,0 +1,57 @@
+/* Forever Faded Dashboard (from forever-faded-platform) */
+.dashboard-page {
+  max-width: 1000px;
+}
+
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--ff-card);
+  border: 1px solid var(--ff-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stat-card-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.stat-card-link:hover {
+  border-color: var(--ff-gold);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.stat-icon {
+  color: var(--ff-gold);
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ff-white);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--ff-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dashboard-section {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ff-gold);
+  margin-bottom: 1rem;
+}
