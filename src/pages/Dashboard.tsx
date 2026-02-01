@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from 'react-oidc-context';
+import { useAuthenticator } from '@aws-amplify/ui-react';
+import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { SEED_LOCATION, SEED_SERVICES } from '../seed-data';
@@ -17,9 +18,9 @@ type Stats = {
 };
 
 export default function Dashboard() {
-  const auth = useAuth();
-  const email = (auth.user?.profile?.email as string) ?? '';
-  const userId = (auth.user?.profile?.sub as string) ?? '';
+  const { user } = useAuthenticator((context) => [context.user]);
+  const email = (user?.signInDetails?.loginId as string) ?? '';
+  const [userId, setUserId] = useState<string>('');
   const [profile, setProfile] = useState<Schema['UserProfile']['type'] | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [seeding, setSeeding] = useState(false);
@@ -28,6 +29,12 @@ export default function Dashboard() {
   const role = profile?.role ?? 'client';
   const displayName = profile?.name ?? email?.split('@')[0] ?? '';
   const isOwnerOrAdmin = role === 'owner' || role === 'admin' || role === 'manager';
+
+  useEffect(() => {
+    getCurrentUser()
+      .then((u) => setUserId(u.userId))
+      .catch(() => setUserId(''));
+  }, [user]);
 
   useEffect(() => {
     if (!userId) return;

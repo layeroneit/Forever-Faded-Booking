@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from 'react-oidc-context';
+import { useAuthenticator } from '@aws-amplify/ui-react';
+import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { Calendar } from 'lucide-react';
@@ -7,11 +8,17 @@ import { Calendar } from 'lucide-react';
 const client = generateClient<Schema>();
 
 export default function Appointments() {
-  const auth = useAuth();
-  const userId = (auth.user?.profile?.sub as string) ?? '';
+  const { user } = useAuthenticator((context) => [context.user]);
+  const [userId, setUserId] = useState<string>('');
   const [appointments, setAppointments] = useState<Schema['Appointment']['type'][]>([]);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState<string>('client');
+
+  useEffect(() => {
+    getCurrentUser()
+      .then((u) => setUserId(u.userId))
+      .catch(() => setUserId(''));
+  }, [user]);
 
   useEffect(() => {
     if (!userId) return;

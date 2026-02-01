@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from 'react-oidc-context';
+import { useAuthenticator } from '@aws-amplify/ui-react';
+import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import {
@@ -21,7 +22,6 @@ import {
   ClipboardList,
   BookUser,
 } from 'lucide-react';
-import { cognitoLogoutConfig } from '../config/cognito';
 import './Layout.css';
 
 const client = generateClient<Schema>();
@@ -79,15 +79,15 @@ const defaultNav = [
 ];
 
 export default function Layout() {
-  const auth = useAuth();
+  const { user, signOut } = useAuthenticator((context) => [context.user, context.signOut]);
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [userId, setUserId] = useState<string>('');
   const [profile, setProfile] = useState<Schema['UserProfile']['type'] | null>(null);
   const [locationName, setLocationName] = useState<string | null>(null);
   const [profileError, setProfileError] = useState<string | null>(null);
 
-  const email = (auth.user?.profile?.email as string) ?? '';
-  const userId = (auth.user?.profile?.sub as string) ?? '';
+  const email = (user?.signInDetails?.loginId as string) ?? '';
   const role = profile?.role ?? 'client';
   const displayName = profile?.name ?? email?.split('@')[0] ?? 'Account';
   const initials = displayName
@@ -98,12 +98,14 @@ export default function Layout() {
     .slice(0, 2) || '?';
   const links = navByRole[role] ?? defaultNav;
 
+  useEffect(() => {
+    getCurrentUser()
+      .then((u) => setUserId(u.userId))
+      .catch(() => setUserId(''));
+  }, [user]);
+
   const handleSignOut = () => {
-    const { clientId, logoutUri, cognitoDomain } = cognitoLogoutConfig;
-    auth.removeUser();
-    if (cognitoDomain) {
-      window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-    }
+    signOut();
   };
 
   useEffect(() => {

@@ -1,9 +1,17 @@
-import { useAuth } from 'react-oidc-context';
+import { useState, useEffect } from 'react';
+import { useAuthenticator } from '@aws-amplify/ui-react';
+import { getCurrentUser } from 'aws-amplify/auth';
 
 export default function Profile() {
-  const auth = useAuth();
-  const email = (auth.user?.profile?.email as string) ?? '';
-  const userId = (auth.user?.profile?.sub as string) ?? '';
+  const { user } = useAuthenticator((context) => [context.user]);
+  const email = (user?.signInDetails?.loginId as string) ?? '';
+  const [userId, setUserId] = useState<string>('');
+
+  useEffect(() => {
+    getCurrentUser()
+      .then((u) => setUserId(u.userId))
+      .catch(() => setUserId(''));
+  }, [user]);
 
   return (
     <div>

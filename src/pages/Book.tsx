@@ -81,8 +81,13 @@ const TIME_SLOTS = [
 ];
 
 export default function Book() {
-  const auth = useAuth();
-  const userId = (auth.user?.profile?.sub as string) ?? '';
+  const { user } = useAuthenticator((context) => [context.user]);
+  const [userId, setUserId] = useState('');
+  useEffect(() => {
+    getCurrentUser()
+      .then((u) => setUserId(u.userId))
+      .catch(() => setUserId(''));
+  }, [user]);
 
   const [step, setStep] = useState(1);
   const [locations, setLocations] = useState<Schema['Location']['type'][]>([]);

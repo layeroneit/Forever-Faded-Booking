@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Amplify } from 'aws-amplify';
-import { AuthProvider } from 'react-oidc-context';
+import { Authenticator } from '@aws-amplify/ui-react';
 import ErrorBoundary from './components/ErrorBoundary';
-import AuthGate from './components/AuthGate';
-import { cognitoAuthConfig } from './config/cognito';
+import AuthHeader from './components/AuthHeader';
 import './index.css';
 import './styles/Login.css';
 import './styles/Book.css';
@@ -51,11 +50,9 @@ loadAmplifyConfig().then(async (outputs) => {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
       <ErrorBoundary>
-        <AuthProvider {...cognitoAuthConfig}>
-          <AuthGate>
-            <App />
-          </AuthGate>
-        </AuthProvider>
+        <Authenticator components={{ Header: AuthHeader }}>
+          <App />
+        </Authenticator>
       </ErrorBoundary>
     </React.StrictMode>
   );
