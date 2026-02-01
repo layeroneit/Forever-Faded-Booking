@@ -230,7 +230,7 @@ export default function Book() {
             <strong>No locations or services yet.</strong> The business owner needs to complete setup first.
           </p>
           <p style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-            If you&apos;re the owner: sign in, create your UserProfile in Amplify Console with role <code>owner</code> (see Profile page for your User ID), then go to Dashboard and click &quot;Seed location &amp; services&quot;.
+            If you&apos;re the owner: sign in, go to Profile and set your role to Owner, then go to Dashboard and click &quot;Seed location &amp; services&quot;.
           </p>
         </div>
       </div>
