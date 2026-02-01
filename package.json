@@ -31,14 +31,17 @@
     "stripe": "^14.0.0"
   },
   "devDependencies": {
-    "@aws-amplify/backend": "^1.16.0",
+    "@aws-amplify/backend": "^1.20.0",
     "@aws-amplify/backend-cli": "^1.8.2",
+    "@aws-amplify/graphql-schema-generator": "^0.11.12",
+    "@aws-amplify/schema-generator": "^1.4.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
     "aws-cdk-lib": "^2.234.1",
     "constructs": "^10.0.0",
     "typescript": "~5.6.2",
+    "tsx": "4.19.4",
     "vite": "^6.0.0"
   }
 }
