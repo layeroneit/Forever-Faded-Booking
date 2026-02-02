@@ -6,6 +6,30 @@
   padding: 0;
 }
 
+.book-page-empty {
+  max-width: 640px;
+}
+
+.book-empty-state {
+  margin-top: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(30, 90, 168, 0.15);
+  border: 1px solid var(--ff-border-blue);
+  border-radius: 12px;
+  color: #93c5fd;
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  line-height: 1.5;
+}
+
+.book-empty-state p {
+  margin-bottom: 0.5rem;
+}
+
+.book-empty-state p:last-child {
+  margin-bottom: 0;
+  opacity: 0.95;
+}
+
 .book-steps {
   display: flex;
   justify-content: space-between;

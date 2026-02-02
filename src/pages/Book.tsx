@@ -15,11 +15,15 @@ const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? '';
 function CheckoutForm({
   appointmentId,
   amountCents,
+  paymentIntentId,
+  testNotes,
   onSuccess,
   onPayAtShop,
 }: {
   appointmentId: string;
   amountCents: number;
+  paymentIntentId: string;
+  testNotes: string;
   onSuccess: () => void;
   onPayAtShop: () => void;
 }) {
@@ -34,16 +38,31 @@ function CheckoutForm({
     setProcessing(true);
     setError('');
     try {
-      const { error: submitError } = await stripe.confirmPayment({
+      const { error: submitError, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: window.location.origin + '/book',
         },
+        redirect: 'if_required',
       });
       if (submitError) {
         setError(submitError.message ?? 'Payment failed');
         setProcessing(false);
         return;
+      }
+      // Payment succeeded - update appointment as paid
+      if (paymentIntent?.status === 'succeeded') {
+        try {
+          await client.models.Appointment.update({
+            id: appointmentId,
+            paymentStatus: 'paid',
+            stripePaymentIntentId: paymentIntentId,
+            notes: testNotes || undefined,
+          });
+        } catch {
+          // Appointment update failed but payment was successful
+          console.warn('Payment succeeded but appointment update failed');
+        }
       }
       onSuccess();
     } catch (err) {
@@ -98,11 +117,14 @@ export default function Book() {
   const [barber, setBarber] = useState<Schema['UserProfile']['type'] | null>(null);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [customPrice, setCustomPrice] = useState('');
+  const [testNotes, setTestNotes] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [bookedAppointment, setBookedAppointment] = useState<Schema['Appointment']['type'] | null>(null);
   const [paymentClientSecret, setPaymentClientSecret] = useState('');
+  const [paymentIntentId, setPaymentIntentId] = useState('');
   const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
   const [bookingSuccess, setBookingSuccess] = useState('');
   const [paymentPreparing, setPaymentPreparing] = useState(false);
@@ -127,7 +149,7 @@ export default function Book() {
   }, []);
 
   const barbersAtLocation = locationId
-    ? barbers.filter((b) => !b.locationId || b.locationId === locationId)
+    ? barbers.filter((b) => b.locationId === locationId)
     : barbers;
   const servicesAtLocation = locationId
     ? services.filter((s) => !s.locationId || s.locationId === locationId)
@@ -142,7 +164,10 @@ export default function Book() {
       const startAt = new Date(`${date}T${time}`);
       const duration = service.durationMinutes ?? 15;
       const endAt = new Date(startAt.getTime() + duration * 60 * 1000);
-      const totalCents = service.priceCents ?? 0;
+      // For special services, use customPrice; otherwise use service.priceCents
+      const totalCents = service.isSpecial
+        ? Math.round(parseFloat(customPrice || '0') * 100)
+        : (service.priceCents ?? 0);
 
       const { data: apt } = await client.models.Appointment.create({
         locationId,
@@ -154,6 +179,7 @@ export default function Book() {
         totalCents,
         status: 'pending',
         paymentStatus: 'unpaid',
+        notes: testNotes || undefined,
       });
 
       const appointment = apt as Schema['Appointment']['type'];
@@ -171,6 +197,7 @@ export default function Book() {
           amountCents: totalCents,
         });
         const secret = (pi as { clientSecret?: string })?.clientSecret;
+        const piId = (pi as { paymentIntentId?: string })?.paymentIntentId ?? '';
         const err = (pi as { error?: string })?.error;
         if (err || !secret) {
           setBookingSuccess('Booking confirmed. Online payment is not configured — please pay at the shop.');
@@ -181,6 +208,7 @@ export default function Book() {
           const stripe = await loadStripe(publishableKey);
           setStripePromise(stripe);
           setPaymentClientSecret(secret);
+          setPaymentIntentId(piId);
         } else {
           setBookingSuccess('Booking confirmed. Set VITE_STRIPE_PUBLISHABLE_KEY for online payment.');
           resetAfterBook();
@@ -201,11 +229,14 @@ export default function Book() {
   const resetAfterBook = () => {
     setBookedAppointment(null);
     setPaymentClientSecret('');
+    setPaymentIntentId('');
     setStep(1);
     setService(null);
     setBarber(null);
     setDate('');
     setTime('');
+    setCustomPrice('');
+    setTestNotes('');
   };
 
   const handlePaymentSuccess = () => {
@@ -223,15 +254,11 @@ export default function Book() {
 
   if (locations.length === 0) {
     return (
-      <div className="book-page">
+      <div className="book-page book-page-empty">
         <h1 className="page-title">Book Appointment</h1>
-        <div className="login-success" style={{ marginTop: '1rem' }}>
-          <p style={{ marginBottom: '0.5rem' }}>
-            <strong>No locations or services yet.</strong> The business owner needs to complete setup first.
-          </p>
-          <p style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-            If you&apos;re the owner: sign in, go to Profile and set your role to Owner, then go to Dashboard and click &quot;Seed location &amp; services&quot;.
-          </p>
+        <div className="book-empty-state">
+          <p><strong>No locations or services yet.</strong> The business owner needs to complete setup first.</p>
+          <p>If you&apos;re the owner: sign in, go to Profile and set your role to Owner, then go to Dashboard and click &quot;Seed location &amp; services&quot;.</p>
         </div>
       </div>
     );
@@ -275,6 +302,8 @@ export default function Book() {
           <CheckoutForm
             appointmentId={bookedAppointment.id}
             amountCents={amountCents}
+            paymentIntentId={paymentIntentId}
+            testNotes={testNotes}
             onSuccess={handlePaymentSuccess}
             onPayAtShop={handlePayAtShop}
           />
@@ -320,6 +349,7 @@ export default function Book() {
             className="book-select"
             value={locationId}
             onChange={(e) => setLocationId(e.target.value)}
+            aria-label="Choose location"
           >
             {locations.map((loc) => (
               <option key={loc.id} value={loc.id}>
@@ -387,11 +417,14 @@ export default function Book() {
                 key={svc.id}
                 type="button"
                 className={`book-card ${service?.id === svc.id ? 'selected' : ''}`}
-                onClick={() => setService(svc)}
+                onClick={() => {
+                  setService(svc);
+                  if (!svc.isSpecial) setCustomPrice('');
+                }}
               >
                 <div className="book-card-name">{svc.name}</div>
                 <div className="book-card-price">
-                  ${((svc.priceCents ?? 0) / 100).toFixed(2)}
+                  {svc.isSpecial ? 'Custom' : `$${((svc.priceCents ?? 0) / 100).toFixed(2)}`}
                 </div>
                 {(svc.durationMinutes ?? 0) > 0 && (
                   <span className="book-duration">
@@ -404,6 +437,21 @@ export default function Book() {
           {servicesAtLocation.length === 0 && (
             <p className="book-empty">No services at this location yet.</p>
           )}
+          {service?.isSpecial && (
+            <div style={{ marginTop: '1rem' }}>
+              <label className="book-label">Enter price ($)</label>
+              <input
+                type="number"
+                className="book-input"
+                value={customPrice}
+                onChange={(e) => setCustomPrice(e.target.value)}
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                style={{ maxWidth: 150 }}
+              />
+            </div>
+          )}
           <div className="book-actions">
             <button type="button" className="btn btn-secondary" onClick={() => setStep(2)}>
               Back
@@ -411,7 +459,7 @@ export default function Book() {
             <button
               type="button"
               className="btn btn-primary"
-              disabled={!service}
+              disabled={!service || (service.isSpecial && (!customPrice || parseFloat(customPrice) <= 0))}
               onClick={() => setStep(4)}
             >
               Next <ChevronRight size={18} />
@@ -429,6 +477,7 @@ export default function Book() {
             value={date}
             min={minDate}
             onChange={(e) => setDate(e.target.value)}
+            aria-label="Select date"
           />
           <label className="book-label">Time</label>
           <div className="book-grid time-slots">
@@ -464,8 +513,18 @@ export default function Book() {
           <h2 className="dashboard-section">Confirm</h2>
           <p className="book-hint">
             {locations.find((l) => l.id === locationId)?.name} — {barber.name} — {service.name} —{' '}
-            ${((service.priceCents ?? 0) / 100).toFixed(2)} — {date} at {time}
+            ${service.isSpecial ? parseFloat(customPrice || '0').toFixed(2) : ((service.priceCents ?? 0) / 100).toFixed(2)} — {date} at {time}
           </p>
+          <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+            <label className="book-label">Test notes (optional)</label>
+            <input
+              type="text"
+              className="book-input"
+              value={testNotes}
+              onChange={(e) => setTestNotes(e.target.value)}
+              placeholder="Notes for testing or special requests"
+            />
+          </div>
           <div className="book-actions">
             <button type="button" className="btn btn-secondary" onClick={() => setStep(4)}>
               Back

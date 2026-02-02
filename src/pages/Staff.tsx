@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
-import { Users, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 const client = generateClient<Schema>();
 
@@ -32,7 +32,7 @@ export default function Staff() {
   return (
     <div>
       <h1 className="page-title">Staff</h1>
-      <p className="page-subtitle">Barbers and staff.</p>
+      <p className="page-subtitle">Barbers and staff. Barbers pin themselves to a location in Profile so they appear when clients book.</p>
       {profiles.length === 0 && (
         <p>No staff yet. Add UserProfiles with role barber, manager, owner, or admin in Amplify Data manager.</p>
       )}
@@ -77,9 +77,13 @@ export default function Staff() {
                 {p.role}
               </span>
               <div style={{ fontSize: '0.9rem', color: 'var(--ff-gray)' }}>{p.email}</div>
-              {p.locationId && locById[p.locationId] && (
+              {p.locationId && locById[p.locationId] ? (
                 <div style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.25rem' }}>
                   <MapPin size={14} /> {locById[p.locationId].name}
+                </div>
+              ) : (
+                <div style={{ fontSize: '0.85rem', color: 'var(--ff-gray)', fontStyle: 'italic', marginTop: '0.25rem' }}>
+                  Not pinned to a location — barber should set in Profile
                 </div>
               )}
             </div>

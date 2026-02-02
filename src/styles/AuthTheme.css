@@ -82,6 +82,26 @@
   min-width: 0;
 }
 
+/* When user is logged in (App with .layout), expand to full width and hide logo */
+.auth-portal-split:has(.layout) {
+  padding: 0;
+  gap: 0;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+}
+.auth-portal-split:has(.layout) .auth-portal-left {
+  display: none;
+}
+.auth-portal-split:has(.layout) .auth-portal-right {
+  max-width: none;
+  flex: 1 1 100%;
+  width: 100%;
+}
+.auth-portal-theme:has(.layout) {
+  overflow: visible;
+}
+
 @media (max-width: 768px) {
   .auth-portal-split {
     flex-direction: column;

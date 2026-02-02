@@ -1,9 +1,12 @@
 /* Forever Faded layout — Gold, Black, Blue & Red */
 .layout {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   background: var(--ff-bg);
+  width: 100%;
+  max-width: 100%;
 }
 
 .layout-header {
@@ -60,8 +63,9 @@
 }
 
 .layout-logo-img {
-  height: 40px;
+  height: clamp(32px, 8vw, 40px);
   width: auto;
+  object-fit: contain;
 }
 
 .layout-logo-text {
@@ -222,6 +226,8 @@
 
 .layout-main {
   flex: 1;
+  width: 100%;
+  max-width: 100%;
   margin-left: min(260px, 85vw);
   margin-top: 56px;
   margin-top: calc(56px + var(--safe-top));
@@ -232,6 +238,7 @@
   min-height: calc(100vh - 56px);
   min-height: calc(100dvh - 56px - var(--safe-top));
   transition: margin-left 0.2s;
+  overflow-x: auto;
 }
 
 .layout-main.full {

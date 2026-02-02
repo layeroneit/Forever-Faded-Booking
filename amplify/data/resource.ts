@@ -78,6 +78,7 @@ const schema = a.schema({
       description: a.string(),
       durationMinutes: a.integer().required(),
       priceCents: a.integer().required(),
+      isSpecial: a.boolean().default(false),
       isActive: a.boolean().default(true),
     })
     .authorization((allow) => [allow.authenticated()]),
