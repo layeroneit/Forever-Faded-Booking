@@ -30,16 +30,49 @@ export default function Profile() {
   }, [user]);
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !email) {
       setLoading(false);
       return;
     }
     let cancelled = false;
-    Promise.all([client.models.UserProfile.list(), client.models.Location.list()])
-      .then(([profRes, locRes]) => {
+    Promise.all([
+      client.models.UserProfile.list(),
+      client.models.Location.list(),
+      client.models.PendingBarber.list(),
+    ])
+      .then(([profRes, locRes, pendingRes]) => {
         if (cancelled) return;
         const mine = (profRes.data ?? []).find((p) => p.userId === userId) as Schema['UserProfile']['type'] | undefined;
-        setProfile(mine ?? null);
+        if (mine) {
+          setProfile(mine);
+          setLocations(locRes.data ?? []);
+          return;
+        }
+        const pending = (pendingRes.data ?? []).find(
+          (p) => p.status === 'pending' && (p.email ?? '').toLowerCase() === email.toLowerCase()
+        ) as Schema['PendingBarber']['type'] | undefined;
+        if (pending) {
+          return client.models.UserProfile.create({
+            userId,
+            email: pending.email,
+            name: pending.name,
+            phone: pending.phone ?? undefined,
+            locationId: pending.locationId ?? undefined,
+            role: 'barber',
+            isActive: true,
+          })
+            .then(({ data: created }) => {
+              if (cancelled) return;
+              if (created) {
+                client.models.PendingBarber.update({ id: pending.id, status: 'used' }).catch(() => {});
+                setProfile(created as Schema['UserProfile']['type']);
+              }
+              setLocations(locRes.data ?? []);
+            })
+            .catch(() => !cancelled && setProfile(null))
+            .finally(() => !cancelled && setLoading(false));
+        }
+        setProfile(null);
         setLocations(locRes.data ?? []);
       })
       .catch(() => !cancelled && setProfile(null))
@@ -47,7 +80,7 @@ export default function Profile() {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, email]);
 
   const handleSetRole = async (role: string) => {
     if (!userId || !email) return;

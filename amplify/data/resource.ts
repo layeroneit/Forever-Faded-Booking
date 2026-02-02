@@ -43,6 +43,17 @@ const schema = a.schema({
     .handler(a.handler.function(createPaymentIntentFn))
     .authorization((allow) => [allow.authenticated()]),
 
+  /** Pending barber: owner adds barber (name, email, phone, location); when they sign up, profile is created from this. */
+  PendingBarber: a
+    .model({
+      email: a.string().required(),
+      name: a.string().required(),
+      phone: a.string(),
+      locationId: a.string(),
+      status: a.string().default('pending'),
+    })
+    .authorization((allow) => [allow.authenticated()]),
+
   /** User profile: links Cognito sub to role and location (client | barber | manager | owner | admin). */
   UserProfile: a
     .model({
