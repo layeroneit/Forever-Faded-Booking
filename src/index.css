@@ -148,6 +148,38 @@ input, select, textarea {
   background: rgba(201, 162, 39, 0.12);
 }
 
+.input-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ff-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.input-label .input-field {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--ff-black-soft);
+  border: 1px solid var(--ff-border);
+  border-radius: 8px;
+  color: var(--ff-white);
+  font-size: 1rem;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--ff-gold);
+  box-shadow: 0 0 0 2px var(--ff-gold-dim);
+}
+
 [data-amplify-authenticator] {
   --amplify-colors-background-primary: var(--ff-bg);
   --amplify-colors-background-secondary: var(--ff-card);

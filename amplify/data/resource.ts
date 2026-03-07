@@ -43,10 +43,10 @@ const schema = a.schema({
     .handler(a.handler.function(createPaymentIntentFn))
     .authorization((allow) => [allow.authenticated()]),
 
-  /** User profile: links Cognito sub to role and location (client | barber | manager | owner | admin). */
+  /** User profile: links Cognito sub to role and location (client | barber | manager | owner | admin). userId optional for barber-added clients (no sign-up yet). */
   UserProfile: a
     .model({
-      userId: a.string().required(),
+      userId: a.string(),
       email: a.string().required(),
       name: a.string().required(),
       phone: a.string(),
@@ -55,7 +55,10 @@ const schema = a.schema({
       preferredBarberId: a.string(),
       isActive: a.boolean().default(true),
     })
-    .authorization((allow) => [allow.owner(), allow.authenticated().to(['read'])]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated().to(['read', 'create', 'update', 'delete']),
+    ]),
 
   Location: a
     .model({
