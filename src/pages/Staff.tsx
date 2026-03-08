@@ -42,11 +42,13 @@ export default function Staff() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [clearingExpired, setClearingExpired] = useState(false);
   const [clearingAll, setClearingAll] = useState(false);
+  const [inviteSuccess, setInviteSuccess] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: '',
     email: '',
     phone: '',
     locationId: '',
+    invitedRole: 'barber' as 'barber' | 'owner',
   });
 
   useEffect(() => {
@@ -94,18 +96,55 @@ export default function Staff() {
     }
     setSaving(true);
     setAddError('');
+    setInviteSuccess(null);
+    const invitedEmail = form.email.trim().toLowerCase();
+    const invitedRole = form.invitedRole;
+    const invitedName = form.name.trim();
     try {
       await client.models.PendingBarber.create({
-        name: form.name.trim(),
-        email: form.email.trim().toLowerCase(),
+        name: invitedName,
+        email: invitedEmail,
         phone: form.phone.trim() || undefined,
         locationId: form.locationId || undefined,
         status: 'pending',
         createdAt: new Date().toISOString(),
-        invitedRole: form.invitedRole,
+        invitedRole,
       });
       setForm({ name: '', email: '', phone: '', locationId: '', invitedRole: 'barber' });
       setShowAdd(false);
+
+      const appUrl = typeof window !== 'undefined' ? window.location.origin : '';
+      const roleLabel = invitedRole === 'owner' ? 'owner' : 'barber';
+
+      try {
+        await client.mutations.sendEmail({
+          to: invitedEmail,
+          subject: "You're invited to Forever Faded",
+          text: `Hi ${invitedName},\n\nYou've been invited to join Forever Faded as a ${roleLabel}. Sign up within 48 hours to accept:\n\n${appUrl}\n\nUse this email address when creating your account. After you sign in, your ${roleLabel} profile will be set up automatically.\n\n— Forever Faded`,
+        });
+      } catch (emailErr) {
+        console.warn('Invite email failed:', emailErr);
+      }
+
+      const { data: allProfiles } = await client.models.UserProfile.list();
+      const ownerEmails = (allProfiles ?? [])
+        .filter((p) => ['owner', 'admin'].includes((p.role ?? '').toLowerCase()))
+        .map((p) => p.email)
+        .filter((e): e is string => !!e && e !== invitedEmail);
+      const uniqueOwnerEmails = [...new Set(ownerEmails)];
+      for (const to of uniqueOwnerEmails) {
+        try {
+          await client.mutations.sendEmail({
+            to,
+            subject: 'Forever Faded — New staff invite',
+            text: `A new ${roleLabel} invitation was sent to ${invitedEmail} (${invitedName}). They will appear in Pending invites until they sign up. Invite expires in ${INVITE_EXPIRY_HOURS} hours.\n\n— Forever Faded`,
+          });
+        } catch (ownerEmailErr) {
+          console.warn('Owner notification email failed:', ownerEmailErr);
+        }
+      }
+
+      setInviteSuccess(`Invite sent to ${invitedEmail}. They'll receive an email to sign up. Invite expires in ${INVITE_EXPIRY_HOURS} hours. They appear below under Pending until they accept.`);
       load();
     } catch (e) {
       setAddError(e instanceof Error ? e.message : 'Failed to add barber');
@@ -167,6 +206,31 @@ export default function Staff() {
     <div>
       <h1 className="page-title">Staff</h1>
       <p className="page-subtitle">Barbers and staff. Add barbers below; they will get barber access when they sign up with that email.</p>
+
+      {inviteSuccess && (
+        <div
+          role="alert"
+          style={{
+            marginBottom: '1rem',
+            padding: '1rem 1.25rem',
+            background: 'rgba(30, 90, 168, 0.2)',
+            border: '1px solid var(--ff-border-blue)',
+            borderRadius: 12,
+            color: '#93c5fd',
+            fontSize: '0.95rem',
+          }}
+        >
+          {inviteSuccess}
+          <button
+            type="button"
+            onClick={() => setInviteSuccess(null)}
+            aria-label="Dismiss"
+            style={{ marginLeft: '1rem', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {isOwner && (
         <div style={{ marginBottom: '1.5rem' }}>

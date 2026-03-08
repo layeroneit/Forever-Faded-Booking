@@ -89,6 +89,19 @@ input, select, textarea {
   font-family: inherit;
 }
 
+select,
+select option,
+select optgroup {
+  background-color: var(--ff-black-soft);
+  color: var(--ff-white);
+}
+
+select:not([class]) {
+  border: 1px solid var(--ff-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
 .page-loading,
 .page-error {
   padding: 2rem;

@@ -3,7 +3,7 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
-import { Scissors, Plus, Star, Pencil, Check, X } from 'lucide-react';
+import { Scissors, Plus, Star, Pencil } from 'lucide-react';
 import '../styles/Book.css';
 
 const client = generateClient<Schema>();
@@ -40,31 +40,42 @@ export default function Services() {
     getCurrentUser().then((u) => setUserId(u.userId)).catch(() => setUserId(''));
   }, [user]);
 
-  useEffect(() => {
-    if (!userId) return;
-    client.models.UserProfile.list()
-      .then(({ data }) => {
-        const mine = (data ?? []).find((p) => p.userId === userId) as Schema['UserProfile']['type'] | undefined;
-        setProfile(mine ?? null);
-      })
-      .catch(() => setProfile(null));
-  }, [userId]);
-
   const loadServices = () => {
-    client.models.Service.list()
+    return client.models.Service.list()
       .then((res) => setServices(res.data ?? []))
-      .catch((e) => setError(e instanceof Error ? e.message : 'Failed to load'))
-      .finally(() => setLoading(false));
+      .catch((e) => setError(e instanceof Error ? e.message : 'Failed to load'));
   };
 
   useEffect(() => {
-    loadServices();
-  }, []);
+    if (!userId) {
+      loadServices().finally(() => setLoading(false));
+      return;
+    }
+    let cancelled = false;
+    Promise.all([
+      client.models.UserProfile.list(),
+      client.models.Service.list(),
+    ])
+      .then(([profRes, svcRes]) => {
+        if (cancelled) return;
+        const mine = (profRes.data ?? []).find((p) => p.userId === userId) as Schema['UserProfile']['type'] | undefined;
+        setProfile(mine ?? null);
+        setServices(svcRes.data ?? []);
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to load');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [userId]);
 
   const isOwner = ['owner', 'admin'].includes(profile?.role ?? '');
   const canEditServices = ['owner', 'barber'].includes((profile?.role ?? '').toLowerCase());
 
   const startEdit = (svc: Schema['Service']['type']) => {
+    setAddError('');
     setEditingId(svc.id);
     setEditForm({
       name: svc.name ?? '',
@@ -145,7 +156,7 @@ export default function Services() {
   return (
     <div>
       <h1 className="page-title">Services</h1>
-      <p className="page-subtitle">Services and pricing. Special services allow custom pricing at checkout. Owners and barbers can edit.</p>
+      <p className="page-subtitle">Services and pricing. Owners and barbers can edit any service (e.g. Full Facial)—change price, duration, name, or deactivate.</p>
 
       {canEditServices && (
         <div style={{ marginBottom: '1.5rem' }}>
@@ -235,7 +246,7 @@ export default function Services() {
           <li key={svc.id}>
             {editingId === svc.id && editForm ? (
               <form onSubmit={handleUpdateService} style={{ background: 'var(--ff-card)', border: '1px solid var(--ff-gold)', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '0.75rem' }}>
-                <h4 style={{ marginBottom: '0.75rem', color: 'var(--ff-gold)', fontSize: '0.95rem' }}>Edit service</h4>
+                <h4 style={{ marginBottom: '0.75rem', color: 'var(--ff-gold)', fontSize: '0.95rem' }}>Edit: {editForm.name || 'Service'}</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxWidth: 400 }}>
                   <label>
                     <span style={{ display: 'block', marginBottom: '0.2rem', fontSize: '0.85rem' }}>Name *</span>
@@ -324,12 +335,12 @@ export default function Services() {
                   {canEditServices && (
                     <button
                       type="button"
-                      className="btn-secondary"
+                      className="btn btn-secondary"
                       onClick={() => startEdit(svc)}
-                      title="Edit service"
-                      style={{ padding: '0.5rem' }}
+                      title="Edit price and details"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', padding: '0.5rem 0.75rem' }}
                     >
-                      <Pencil size={18} />
+                      <Pencil size={18} /> Edit
                     </button>
                   )}
                 </div>
