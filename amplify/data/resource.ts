@@ -1,6 +1,6 @@
 import { type ClientSchema, a, defineData, defineFunction } from '@aws-amplify/backend';
 
-const sendEmailFn = defineFunction({
+export const sendEmailFn = defineFunction({
   name: 'send-email',
   entry: '../functions/send-email/handler.ts',
   timeoutSeconds: 15,

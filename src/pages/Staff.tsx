@@ -130,13 +130,19 @@ export default function Staff() {
       const appUrl = typeof window !== 'undefined' ? window.location.origin : '';
       const roleLabel = invitedRole === 'owner' ? 'owner' : 'barber';
 
+      let inviteEmailSent = false;
+      let inviteEmailError: string | null = null;
       try {
-        await client.mutations.sendEmail({
+        const result = await client.mutations.sendEmail({
           to: invitedEmail,
           subject: "You're invited to Forever Faded",
           text: `Hi ${invitedName},\n\nYou've been invited to join Forever Faded as a ${roleLabel}. Sign up within 48 hours to accept:\n\n${appUrl}\n\nUse this email address when creating your account. After you sign in, your ${roleLabel} profile will be set up automatically.\n\n— Forever Faded`,
         });
+        const data = result.data as { sent?: boolean; error?: string } | undefined;
+        inviteEmailSent = data?.sent === true;
+        if (!inviteEmailSent && data?.error) inviteEmailError = data.error;
       } catch (emailErr) {
+        inviteEmailError = emailErr instanceof Error ? emailErr.message : 'Send failed';
         console.warn('Invite email failed:', emailErr);
       }
 
@@ -169,7 +175,12 @@ export default function Staff() {
         : isOwner
           ? ' Notification emails could not be sent — check EMAIL.md for SES setup (MAIL_FROM, verified identity).'
           : '';
-      setInviteSuccess(`Invite sent to ${invitedEmail}. They'll receive an email to sign up. Invite expires in ${INVITE_EXPIRY_HOURS} hours. They appear below under Pending until they accept.${notifyNote}`);
+      const inviteNote = inviteEmailSent
+        ? ` They'll receive an email to sign up.`
+        : inviteEmailError
+          ? ` Invite email could not be sent: ${inviteEmailError}. See EMAIL.md and ensure SES is configured (verified MAIL_FROM, IAM, and if in Sandbox add the recipient as verified).`
+          : '';
+      setInviteSuccess(`Invite saved for ${invitedEmail}.${inviteNote} Invite expires in ${INVITE_EXPIRY_HOURS} hours. They appear below under Pending until they accept.${notifyNote}`);
       /* Refetch to stay in sync with server (new invite already added optimistically above) */
       load();
     } catch (e) {

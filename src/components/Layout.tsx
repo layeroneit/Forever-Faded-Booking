@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { getCurrentUser } from 'aws-amplify/auth';
+import { getCurrentUser, fetchUserAttributes } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import {
@@ -150,6 +150,25 @@ export default function Layout() {
           }
         } else {
           setProfile(null);
+          try {
+            const attrs = await fetchUserAttributes();
+            const name = (attrs?.preferred_username as string)?.trim() || email?.split('@')[0] || 'Client';
+            const { data: created } = await client.models.UserProfile.create({
+              userId,
+              email: email || '',
+              name: name || 'Client',
+              role: 'client',
+            });
+            if (cancelled) return;
+            if (created) {
+              setProfile(created as Schema['UserProfile']['type']);
+            }
+          } catch (createErr) {
+            if (!cancelled) {
+              const msg = createErr instanceof Error ? createErr.message : String(createErr);
+              setProfileError(msg || 'Failed to create profile');
+            }
+          }
         }
       } catch (e) {
         if (!cancelled) {
@@ -162,7 +181,7 @@ export default function Layout() {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, email]);
 
   // Close mobile menu when route changes (e.g. after tapping a nav link)
   useEffect(() => {
@@ -245,6 +264,14 @@ export default function Layout() {
         )}
         <Outlet />
       </main>
+
+      <footer className="layout-powered-by" aria-label="Powered by">
+        <span className="layout-powered-by-label">Powered by</span>
+        <span className="layout-powered-by-logos">
+          <img src={`${import.meta.env.BASE_URL || '/'}powered-by/ghostweave.png`} alt="Ghostweave Labs" />
+          <img src={`${import.meta.env.BASE_URL || '/'}powered-by/layerone.png`} alt="Layer One" />
+        </span>
+      </footer>
     </div>
   );
 }

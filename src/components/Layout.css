@@ -303,6 +303,50 @@
   display: none;
 }
 
+/* Powered by — fixed lower right, standard attribution */
+.layout-powered-by {
+  position: fixed;
+  bottom: 12px;
+  right: 16px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.2;
+}
+
+.layout-powered-by-label {
+  flex-shrink: 0;
+}
+
+.layout-powered-by-logos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.layout-powered-by-logos img {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .layout-powered-by {
+    font-size: 10px;
+    bottom: 8px;
+    right: 10px;
+    gap: 6px;
+  }
+  .layout-powered-by-logos img {
+    height: 18px;
+  }
+}
+
 @media (max-width: 768px) {
   .layout-sidebar {
     transform: translateX(-100%);

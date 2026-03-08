@@ -15,7 +15,8 @@ export const handler: Handler<SendEmailEvent> = async (event) => {
   }
   try {
     const { SESClient, SendEmailCommand } = await import('@aws-sdk/client-ses');
-    const client = new SESClient({});
+    const region = process.env.AWS_REGION ?? process.env.AWS_DEFAULT_REGION;
+    const client = new SESClient(region ? { region } : {});
     const from = process.env.MAIL_FROM ?? 'noreply@foreverfaded.com';
     await client.send(
       new SendEmailCommand({
