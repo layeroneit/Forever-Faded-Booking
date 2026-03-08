@@ -144,6 +144,11 @@ export default function Layout() {
     };
   }, [userId]);
 
+  // Close mobile menu when route changes (e.g. after tapping a nav link)
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
+
   return (
     <div className="layout">
       <header className="layout-header">
@@ -170,6 +175,13 @@ export default function Layout() {
         </Link>
         <div className="layout-spacer" />
       </header>
+
+      {/* Backdrop: tap outside sidebar to close on mobile */}
+      <div
+        className={`layout-sidebar-backdrop ${sidebarOpen ? 'open' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+        aria-hidden="true"
+      />
 
       <aside className={`layout-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="layout-sidebar-header">
