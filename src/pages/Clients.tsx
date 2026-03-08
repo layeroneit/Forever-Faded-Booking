@@ -9,7 +9,8 @@ const client = generateClient<Schema>();
 const STAFF_ROLES = ['barber', 'manager', 'owner', 'admin'];
 
 function canManageClients(role: string) {
-  return STAFF_ROLES.includes(role);
+  const r = (role ?? '').toLowerCase();
+  return STAFF_ROLES.includes(r);
 }
 
 export default function Clients() {
@@ -118,7 +119,7 @@ export default function Clients() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
         <div>
           <h1 className="page-title">Clients</h1>
-          <p className="page-subtitle">Master client list. Changes by barbers appear here for owners.</p>
+          <p className="page-subtitle">Master client list. Owners and barbers can add or remove clients.</p>
         </div>
         {canManage && (
           <button

@@ -17,31 +17,30 @@
     "audit:fix": "npm audit fix"
   },
   "dependencies": {
-    "@aws-amplify/ui-react": "^6.0.0",
-    "@aws-sdk/client-ses": "^3.0.0",
-    "@stripe/react-stripe-js": "^2.4.0",
-    "@stripe/stripe-js": "^2.2.0",
-    "aws-amplify": "^6.0.0",
+    "@aws-amplify/ui-react": "^6.15.1",
+    "@aws-sdk/client-ses": "^3.1004.0",
+    "@stripe/react-stripe-js": "^2.9.0",
+    "@stripe/stripe-js": "^2.4.0",
+    "aws-amplify": "^6.16.2",
     "lucide-react": "^0.460.0",
-    "oidc-client-ts": "^3.0.1",
+    "oidc-client-ts": "^3.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-oidc-context": "^3.0.1",
-    "react-router-dom": "^6.28.0",
-    "stripe": "^14.0.0"
+    "react-oidc-context": "^3.3.0",
+    "react-router-dom": "^6.30.3",
+    "stripe": "^14.25.0"
   },
   "devDependencies": {
-    "@aws-amplify/backend": "^1.20.0",
+    "@aws-amplify/backend": "^1.21.0",
     "@aws-amplify/backend-cli": "^1.8.2",
-    "@aws-amplify/graphql-schema-generator": "^0.11.12",
+    "@aws-amplify/graphql-schema-generator": "^0.11.13",
     "@aws-amplify/schema-generator": "^1.4.1",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "aws-cdk-lib": "^2.234.1",
-    "constructs": "^10.0.0",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "aws-cdk-lib": "^2.241.0",
+    "constructs": "^10.5.1",
     "typescript": "~5.6.2",
-    "tsx": "4.19.4",
-    "vite": "^6.0.0"
+    "vite": "^6.4.1"
   }
 }
