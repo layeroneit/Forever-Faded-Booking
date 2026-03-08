@@ -5,6 +5,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import ErrorBoundary from './components/ErrorBoundary';
 import AuthHeader from './components/AuthHeader';
 import AuthFooter from './components/AuthFooter';
+import { getLogoUrl } from './lib/logo';
 import './index.css';
 import './styles/Login.css';
 import './styles/Book.css';
@@ -86,7 +87,7 @@ loadAmplifyConfig().then(async (outputs) => {
           <div className="auth-portal-split">
             <div className="auth-portal-left">
               <img
-                src={`${import.meta.env.BASE_URL || '/'}logo.png`.replace(/\/+/g, '/')}
+                src={getLogoUrl()}
                 alt="Forever Faded — Est. 2008"
                 decoding="async"
               />

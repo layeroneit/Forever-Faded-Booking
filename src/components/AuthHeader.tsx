@@ -2,13 +2,13 @@
  * Platform-matching auth header: Forever Faded logo + heading + tagline.
  * Used on sign-in/sign-up (Amplify Authenticator).
  */
-const logoUrl = `${import.meta.env.BASE_URL || '/'}logo.png`.replace(/\/+/g, '/');
+import { getLogoUrl } from '../lib/logo';
 
 export default function AuthHeader() {
   return (
     <div className="login-logo">
       <img
-        src={logoUrl}
+        src={getLogoUrl()}
         alt="Forever Faded — Est. 2008"
         decoding="async"
         onError={(e) => {

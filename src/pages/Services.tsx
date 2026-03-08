@@ -71,8 +71,7 @@ export default function Services() {
     return () => { cancelled = true; };
   }, [userId]);
 
-  const isOwner = ['owner', 'admin'].includes(profile?.role ?? '');
-  const canEditServices = ['owner', 'barber'].includes((profile?.role ?? '').toLowerCase());
+  const canEditServices = ['owner', 'barber', 'manager', 'admin'].includes((profile?.role ?? '').toLowerCase());
 
   const startEdit = (svc: Schema['Service']['type']) => {
     setAddError('');
@@ -156,7 +155,7 @@ export default function Services() {
   return (
     <div>
       <h1 className="page-title">Services</h1>
-      <p className="page-subtitle">Services and pricing. Owners and barbers can edit any service (e.g. Full Facial)—change price, duration, name, or deactivate.</p>
+      <p className="page-subtitle">Services and pricing. Owners, barbers, and staff can edit any service—change price, duration, or deactivate.</p>
 
       {canEditServices && (
         <div style={{ marginBottom: '1.5rem' }}>
@@ -306,12 +305,7 @@ export default function Services() {
                         Custom price
                       </span>
                     )}
-                    {svc.category && !svc.isSpecial && (
-                      <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', color: 'var(--ff-gray)' }}>
-                        {svc.category}
-                      </span>
-                    )}
-                    {svc.category && svc.isSpecial && (
+                    {svc.category && (
                       <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', color: 'var(--ff-gray)' }}>
                         {svc.category}
                       </span>

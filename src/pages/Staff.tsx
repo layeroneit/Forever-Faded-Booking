@@ -131,7 +131,12 @@ export default function Staff() {
         .filter((p) => ['owner', 'admin'].includes((p.role ?? '').toLowerCase()))
         .map((p) => p.email)
         .filter((e): e is string => !!e && e !== invitedEmail);
+      const loginEmail = (user?.signInDetails?.loginId as string)?.trim()?.toLowerCase();
+      if (loginEmail && isOwner && loginEmail !== invitedEmail && !ownerEmails.includes(loginEmail)) {
+        ownerEmails.push(loginEmail);
+      }
       const uniqueOwnerEmails = [...new Set(ownerEmails)];
+      let ownerNotifyCount = 0;
       for (const to of uniqueOwnerEmails) {
         try {
           await client.mutations.sendEmail({
@@ -139,12 +144,16 @@ export default function Staff() {
             subject: 'Forever Faded — New staff invite',
             text: `A new ${roleLabel} invitation was sent to ${invitedEmail} (${invitedName}). They will appear in Pending invites until they sign up. Invite expires in ${INVITE_EXPIRY_HOURS} hours.\n\n— Forever Faded`,
           });
+          ownerNotifyCount += 1;
         } catch (ownerEmailErr) {
           console.warn('Owner notification email failed:', ownerEmailErr);
         }
       }
 
-      setInviteSuccess(`Invite sent to ${invitedEmail}. They'll receive an email to sign up. Invite expires in ${INVITE_EXPIRY_HOURS} hours. They appear below under Pending until they accept.`);
+      const notifyNote = ownerNotifyCount > 0
+        ? ` Owners have been notified by email.`
+        : '';
+      setInviteSuccess(`Invite sent to ${invitedEmail}. They'll receive an email to sign up. Invite expires in ${INVITE_EXPIRY_HOURS} hours. They appear below under Pending until they accept.${notifyNote}`);
       load();
     } catch (e) {
       setAddError(e instanceof Error ? e.message : 'Failed to add barber');
@@ -324,89 +333,95 @@ export default function Staff() {
         </div>
       )}
 
-      {pendingBarbers.length > 0 && (
-        <div style={{ marginBottom: '1.5rem' }}>
-          <h3 style={{ fontSize: '1rem', color: 'var(--ff-gold)', marginBottom: '0.75rem' }}>
-            Pending invites (expire after {INVITE_EXPIRY_HOURS}h)
-          </h3>
-          {isOwner && (expiredCount > 0 || pendingBarbers.length > 0) && (
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-              {expiredCount > 0 && (
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h3 style={{ fontSize: '1rem', color: 'var(--ff-gold)', marginBottom: '0.75rem' }}>
+          Pending invites (expire after {INVITE_EXPIRY_HOURS}h)
+        </h3>
+        {pendingBarbers.length === 0 ? (
+          <p style={{ fontSize: '0.9rem', color: 'var(--ff-gray)' }}>
+            No pending invites. Use &quot;Add barber&quot; above to send an invite; they will appear here until they sign up.
+          </p>
+        ) : (
+          <>
+            {isOwner && (expiredCount > 0 || pendingBarbers.length > 0) && (
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+                {expiredCount > 0 && (
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={handleRemoveExpired}
+                    disabled={clearingExpired}
+                  >
+                    {clearingExpired ? 'Removing…' : `Remove expired (${expiredCount})`}
+                  </button>
+                )}
                 <button
                   type="button"
                   className="btn-secondary"
-                  onClick={handleRemoveExpired}
-                  disabled={clearingExpired}
+                  onClick={handleClearAllPending}
+                  disabled={clearingAll}
                 >
-                  {clearingExpired ? 'Removing…' : `Remove expired (${expiredCount})`}
+                  {clearingAll ? 'Removing…' : 'Clear all pending'}
                 </button>
-              )}
-              <button
-                type="button"
-                className="btn-secondary"
-                onClick={handleClearAllPending}
-                disabled={clearingAll}
-              >
-                {clearingAll ? 'Removing…' : 'Clear all pending'}
-              </button>
-            </div>
-          )}
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {pendingBarbers.map((p) => {
-              const expired = isInviteExpired(p.createdAt);
-              return (
-                <li
-                  key={p.id}
-                  style={{
-                    background: expired ? 'rgba(185, 28, 28, 0.12)' : 'var(--ff-card)',
-                    border: `1px solid ${expired ? 'var(--ff-red)' : 'var(--ff-gold)'}`,
-                    borderRadius: 12,
-                    padding: '0.75rem 1rem',
-                    marginBottom: '0.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '0.75rem',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
-                    <UserPlus size={20} color={expired ? 'var(--ff-red)' : 'var(--ff-gold)'} />
-                    <div>
-                      <strong>{p.name}</strong> — {p.email}
-                      {(p as { invitedRole?: string }).invitedRole === 'owner' && (
-                        <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--ff-gold)', textTransform: 'uppercase' }}>Owner</span>
-                      )}
-                      {p.phone && <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', color: 'var(--ff-gray)' }}>{p.phone}</span>}
-                      <div style={{ fontSize: '0.8rem', color: 'var(--ff-gray)', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <Clock size={12} />
-                        {getExpiryLabel(p.createdAt)}
-                        {expired && <span style={{ color: 'var(--ff-red)', fontWeight: 600 }}>— Expired</span>}
-                      </div>
-                      {p.locationId && locById[p.locationId] && (
-                        <div style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.25rem' }}>
-                          <MapPin size={12} /> {locById[p.locationId].name}
+              </div>
+            )}
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {pendingBarbers.map((p) => {
+                const expired = isInviteExpired(p.createdAt);
+                return (
+                  <li
+                    key={p.id}
+                    style={{
+                      background: expired ? 'rgba(185, 28, 28, 0.12)' : 'var(--ff-card)',
+                      border: `1px solid ${expired ? 'var(--ff-red)' : 'var(--ff-gold)'}`,
+                      borderRadius: 12,
+                      padding: '0.75rem 1rem',
+                      marginBottom: '0.5rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '0.75rem',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                      <UserPlus size={20} color={expired ? 'var(--ff-red)' : 'var(--ff-gold)'} />
+                      <div>
+                        <strong>{p.name}</strong> — {p.email}
+                        {(p as { invitedRole?: string }).invitedRole === 'owner' && (
+                          <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--ff-gold)', textTransform: 'uppercase' }}>Owner</span>
+                        )}
+                        {p.phone && <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', color: 'var(--ff-gray)' }}>{p.phone}</span>}
+                        <div style={{ fontSize: '0.8rem', color: 'var(--ff-gray)', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <Clock size={12} />
+                          {getExpiryLabel(p.createdAt)}
+                          {expired && <span style={{ color: 'var(--ff-red)', fontWeight: 600 }}>— Expired</span>}
                         </div>
-                      )}
+                        {p.locationId && locById[p.locationId] && (
+                          <div style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.25rem' }}>
+                            <MapPin size={12} /> {locById[p.locationId].name}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  {isOwner && (
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      onClick={() => handleDeletePending(p.id)}
-                      disabled={deletingId === p.id}
-                      title="Remove this pending invite"
-                      style={{ flexShrink: 0, padding: '0.5rem' }}
-                    >
-                      {deletingId === p.id ? '…' : <Trash2 size={18} />}
-                    </button>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
+                    {isOwner && (
+                      <button
+                        type="button"
+                        className="btn-secondary"
+                        onClick={() => handleDeletePending(p.id)}
+                        disabled={deletingId === p.id}
+                        title="Remove this pending invite"
+                        style={{ flexShrink: 0, padding: '0.5rem' }}
+                      >
+                        {deletingId === p.id ? '…' : <Trash2 size={18} />}
+                      </button>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
+      </div>
 
       {profiles.length === 0 && pendingBarbers.length === 0 && !showAdd && (
         <p>No staff yet. Add barbers above or set roles in Profile.</p>

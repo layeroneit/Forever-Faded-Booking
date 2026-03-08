@@ -22,6 +22,7 @@ import {
   ClipboardList,
   BookUser,
 } from 'lucide-react';
+import { getLogoUrl } from '../lib/logo';
 import './Layout.css';
 
 const client = generateClient<Schema>();
@@ -156,7 +157,7 @@ export default function Layout() {
         </button>
         <Link to="/" className="layout-logo">
           <img
-            src={`${import.meta.env.BASE_URL || '/'}logo.png`.replace(/\/+/g, '/')}
+            src={getLogoUrl()}
             alt="Forever Faded — Est. 2008"
             className="layout-logo-img"
             decoding="async"
