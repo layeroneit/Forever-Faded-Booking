@@ -9,6 +9,7 @@ import './index.css';
 import './styles/Login.css';
 import './styles/Book.css';
 import '@aws-amplify/ui-react/styles.css';
+import './styles/AuthTheme.css';
 
 function isAuthConfigured(outputs: Record<string, unknown>): boolean {
   const auth = outputs?.auth as { user_pool_id?: string } | undefined;
@@ -81,17 +82,30 @@ loadAmplifyConfig().then(async (outputs) => {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
       <ErrorBoundary>
-        <Authenticator
-          loginMechanisms={['email']}
-          signUpAttributes={['preferred_username']}
-          hideSignUp={false}
-          components={{
-            Header: AuthHeader,
-            Footer: AuthFooter,
-          }}
-        >
-          <App />
-        </Authenticator>
+        <div className="auth-portal-theme">
+          <div className="auth-portal-split">
+            <div className="auth-portal-left">
+              <img src={`${import.meta.env.BASE_URL || '/'}logo.png`.replace(/\/+/g, '/')} alt="Forever Faded" />
+              <div className="auth-portal-brand">
+                <h1>FOREVER FADED</h1>
+                <p>ESTD 2008 · For The Culture</p>
+              </div>
+            </div>
+            <div className="auth-portal-right">
+              <Authenticator
+                loginMechanisms={['email']}
+                signUpAttributes={['preferred_username']}
+                hideSignUp={false}
+                components={{
+                  Header: () => null,
+                  Footer: AuthFooter,
+                }}
+              >
+                <App />
+              </Authenticator>
+            </div>
+          </div>
+        </div>
       </ErrorBoundary>
     </React.StrictMode>
   );

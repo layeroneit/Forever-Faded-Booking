@@ -36,7 +36,9 @@ const navByRole: Record<string, { to: string; label: string; icon: typeof Home }
     { to: '/dashboard', label: 'Dashboard', icon: Home },
     { to: '/schedule', label: 'Schedule', icon: Calendar },
     { to: '/appointments', label: 'Appointments', icon: Calendar },
-    { to: '/clients', label: 'Clients', icon: BookUser },
+    { to: '/clients', label: 'My Clients', icon: BookUser },
+    { to: '/services', label: 'Services', icon: Scissors },
+    { to: '/locations', label: 'Locations', icon: MapPin },
     { to: '/profile', label: 'Profile', icon: User },
   ],
   manager: [

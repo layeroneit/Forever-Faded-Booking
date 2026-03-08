@@ -17,7 +17,7 @@ export default function Clients() {
   const [appointments, setAppointments] = useState<Schema['Appointment']['type'][]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [currentRole, setCurrentRole] = useState<string>('client');
+  const [myProfile, setMyProfile] = useState<Schema['UserProfile']['type'] | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [addForm, setAddForm] = useState({ name: '', email: '', phone: '' });
@@ -36,23 +36,31 @@ export default function Clients() {
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const u = await getCurrentUser();
-        const { data } = await client.models.UserProfile.list();
+        const userId = (await getCurrentUser()).userId;
+        const [profRes, aptRes] = await Promise.all([
+          client.models.UserProfile.list(),
+          client.models.Appointment.list(),
+        ]);
         if (cancelled) return;
-        const mine = (data ?? []).find((p) => p.userId === u.userId);
-        if (mine) setCurrentRole(mine.role ?? 'client');
-      } catch {
-        /* ignore */
+        const allProfiles = profRes.data ?? [];
+        const myProf = allProfiles.find((p) => p.userId === userId) as Schema['UserProfile']['type'] | undefined;
+        setMyProfile(myProf ?? null);
+
+        const clients = allProfiles.filter((p) => p.role === 'client') as Schema['UserProfile']['type'][];
+        setProfiles(clients);
+        setAppointments(aptRes.data ?? []);
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to load');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (loading) return <div className="page-loading">Loading clients…</div>;
@@ -103,7 +111,7 @@ export default function Clients() {
     }
   };
 
-  const canManage = canManageClients(currentRole);
+  const canManage = canManageClients(myProfile?.role ?? 'client');
 
   return (
     <div>
