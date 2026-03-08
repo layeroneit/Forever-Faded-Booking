@@ -260,3 +260,47 @@
 .auth-portal-theme [data-amplify-authenticator] ::placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
+
+/* Powered by — fixed lower right on login/sign-up page */
+.auth-powered-by {
+  position: fixed;
+  bottom: 12px;
+  right: 16px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.2;
+}
+
+.auth-powered-by-label {
+  flex-shrink: 0;
+}
+
+.auth-powered-by-logos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-powered-by-logos img {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .auth-powered-by {
+    font-size: 10px;
+    bottom: 8px;
+    right: 10px;
+    gap: 6px;
+  }
+  .auth-powered-by-logos img {
+    height: 24px;
+  }
+}

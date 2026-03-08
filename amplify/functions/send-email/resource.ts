@@ -5,6 +5,6 @@ export const sendEmail = defineFunction({
   entry: './handler.ts',
   timeoutSeconds: 15,
   environment: {
-    MAIL_FROM: process.env.MAIL_FROM ?? 'noreply@foreverfaded.com',
+    MAIL_FROM: process.env.MAIL_FROM ?? 'noreply@layeroneconsultants.com',
   },
 });
