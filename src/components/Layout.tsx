@@ -81,6 +81,11 @@ const defaultNav = [
   { to: '/profile', label: 'Profile', icon: User },
 ];
 
+/** Inactivity timeout in ms — sign out after no user activity (mouse, keyboard, touch, scroll). */
+const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+
+const ACTIVITY_EVENTS = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'] as const;
+
 export default function Layout() {
   const { user, signOut } = useAuthenticator((context) => [context.user, context.signOut]);
   const location = useLocation();
@@ -110,6 +115,21 @@ export default function Layout() {
   const handleSignOut = () => {
     signOut();
   };
+
+  // Inactivity timeout: sign out after INACTIVITY_TIMEOUT_MS with no activity
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => signOut(), INACTIVITY_TIMEOUT_MS);
+    };
+    resetTimer();
+    ACTIVITY_EVENTS.forEach((ev) => document.addEventListener(ev, resetTimer));
+    return () => {
+      clearTimeout(timeoutId);
+      ACTIVITY_EVENTS.forEach((ev) => document.removeEventListener(ev, resetTimer));
+    };
+  }, [signOut]);
 
   useEffect(() => {
     if (!userId) return;

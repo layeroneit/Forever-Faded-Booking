@@ -6,27 +6,21 @@
 .auth-portal-theme {
   min-height: 100vh;
   min-height: 100dvh;
-  background: var(--ff-bg);
+  background-color: var(--ff-bg);
+  background-image: var(--ff-bg-vignette), var(--ff-texture-image);
+  background-blend-mode: multiply;
+  background-repeat: repeat;
+  background-size: auto;
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 0 40vmin 5vmin rgba(0, 0, 0, 0.4);
 }
 
-/* Textured black — same as body, woven look */
-.auth-portal-theme::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: var(--ff-texture);
-  background-repeat: repeat;
-  background-size: 24px 24px;
-  pointer-events: none;
-  z-index: 0;
-}
 .auth-portal-theme > * {
   position: relative;
   z-index: 1;
 }
+
+/* Pebbled leather texture overlay removed — vignette + PNG texture used on .auth-portal-theme */
 
 /* Golden wavy accents */
 .auth-portal-theme::before {
@@ -66,32 +60,27 @@
 }
 
 .auth-portal-left img {
-  max-width: min(320px, 50vw);
+  /* Match sign-in widget size: widget is max 420px wide */
+  max-width: min(420px, 55vw);
   width: 100%;
   height: auto;
-  max-height: clamp(120px, 25vw, 200px);
+  max-height: min(420px, 38vw);
   object-fit: contain;
 }
 
-.auth-portal-left .auth-portal-brand {
-  text-align: center;
+.auth-portal-logo-tagline {
   margin-top: 0.75rem;
-}
-
-.auth-portal-left .auth-portal-brand h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 400;
+  font-size: clamp(0.7rem, 2vw, 0.85rem);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--ff-gold);
-  letter-spacing: 0.12em;
-  margin: 0;
+  text-align: center;
+  opacity: 0.95;
 }
 
-.auth-portal-left .auth-portal-brand p {
-  font-size: 0.75rem;
-  color: var(--ff-gray);
-  letter-spacing: 0.1em;
-  margin: 0.25rem 0 0;
+.auth-portal-left .auth-portal-brand {
+  display: none;
 }
 
 .auth-portal-right {
@@ -130,8 +119,10 @@
     gap: 1rem;
   }
 
+  /* Logo scales with widget on small screens (widget stays ~100% width, logo matches proportion) */
   .auth-portal-left img {
-    max-width: min(160px, 40vw);
+    max-width: min(320px, 75vw);
+    max-height: min(320px, 75vw);
   }
 
   .auth-portal-left .auth-portal-brand h1 {
@@ -148,12 +139,12 @@
   }
 
   .auth-portal-left img {
-    max-width: 160px;
-    max-height: 120px;
+    max-width: min(280px, 85vw);
+    max-height: min(280px, 85vw);
   }
 }
 
-/* Authenticator container — fits in right panel */
+/* Authenticator container — logo palette (gold, royal blue, charcoal) */
 .auth-portal-theme [data-amplify-authenticator] {
   --amplify-colors-background-primary: var(--ff-bg);
   --amplify-colors-background-secondary: var(--ff-card);
@@ -164,7 +155,7 @@
   --amplify-colors-font-secondary: rgba(255, 255, 255, 0.7);
   --amplify-colors-font-tertiary: rgba(255, 255, 255, 0.5);
   --amplify-colors-brand-primary-80: var(--ff-gold);
-  --amplify-colors-brand-primary-90: var(--ff-gold-light);
+  --amplify-colors-brand-primary-90: var(--ff-gold-bright);
   --amplify-colors-brand-primary-100: var(--ff-gold);
   --amplify-colors-brand-secondary-10: rgba(212, 175, 55, 0.1);
   min-height: auto;
@@ -175,12 +166,12 @@
   background: transparent !important;
 }
 
-/* Auth card — dark charcoal, floats with shadow (logo palette) */
+/* Auth card — charcoal, logo gold border */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-router] {
   width: 100%;
   max-width: min(420px, 100%);
   background: var(--ff-black-card) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--ff-border);
   border-radius: 16px;
   padding: clamp(1.25rem, 4vw, 2rem);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.03);
@@ -191,7 +182,7 @@
   border: none;
 }
 
-/* Inputs — dark with gold accent (logo metallic gold) */
+/* Inputs — charcoal, logo gold border/focus */
 .auth-portal-theme [data-amplify-authenticator] input,
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-input] {
   background: var(--ff-black-soft) !important;
@@ -207,16 +198,16 @@
   box-shadow: 0 0 0 2px var(--ff-gold-dim) !important;
 }
 
-/* Labels */
+/* Labels — metallic gold to match logo text/crest */
 .auth-portal-theme [data-amplify-authenticator] label,
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-label] {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: var(--ff-gold) !important;
 }
 
-/* Primary submit button — metallic gold from logo, white text */
+/* Primary submit button — logo gold gradient, white text */
 .auth-portal-theme [data-amplify-authenticator] button[type="submit"],
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="primary"] {
-  background: linear-gradient(135deg, var(--ff-gold), var(--ff-gold-light)) !important;
+  background: linear-gradient(135deg, var(--ff-gold), var(--ff-gold-bright)) !important;
   color: #ffffff !important;
   font-weight: 700 !important;
   border: none !important;
@@ -224,27 +215,27 @@
 
 .auth-portal-theme [data-amplify-authenticator] button[type="submit"]:hover,
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="primary"]:hover {
-  background: linear-gradient(135deg, var(--ff-gold-light), var(--ff-gold)) !important;
+  background: linear-gradient(135deg, var(--ff-gold-bright), var(--ff-gold)) !important;
 }
 
-/* Active tab + links — teal from logo (crown/finial accent) */
+/* Active tab + links — royal blue from logo (Sign In tab, Forgot password?) */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-tabs] [data-state="active"] {
-  color: var(--ff-accent-teal) !important;
-  border-color: var(--ff-accent-teal) !important;
+  color: var(--ff-royal-blue-accent) !important;
+  border-color: var(--ff-royal-blue-accent) !important;
 }
 
-/* Links (e.g. Forgot your password?) — teal to match logo */
+/* Links (e.g. Forgot your password?) — logo blue */
 .auth-portal-theme [data-amplify-authenticator] a {
-  color: var(--ff-accent-teal) !important;
+  color: var(--ff-royal-blue-accent) !important;
 }
 
 .auth-portal-theme [data-amplify-authenticator] a:hover {
-  color: #2dd4bf !important;
+  color: var(--ff-royal-blue-accent-hover) !important;
 }
 
-/* Sign out / secondary actions */
+/* Sign out / secondary actions — logo blue */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="link"] {
-  color: var(--ff-accent-teal) !important;
+  color: var(--ff-royal-blue-accent) !important;
 }
 
 /* Force white/light text — override any dark blue or dark Amplify defaults */

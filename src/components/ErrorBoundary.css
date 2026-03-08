@@ -1,9 +1,13 @@
 .error-boundary {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  padding-left: calc(1.5rem + env(safe-area-inset-left, 0px));
+  padding-right: calc(1.5rem + env(safe-area-inset-right, 0px));
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
   background: var(--ff-black);
 }
 

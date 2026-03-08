@@ -74,9 +74,9 @@
 }
 
 .book-step.active .book-step-num {
-  background: var(--ff-gold);
-  border-color: var(--ff-gold);
-  color: var(--ff-black);
+  background: var(--ff-gold-ui);
+  border-color: var(--ff-gold-ui);
+  color: var(--ff-white);
 }
 
 .book-panel {
@@ -97,7 +97,7 @@
   display: block;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--ff-gold);
+  color: var(--ff-gold-ui);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
@@ -126,7 +126,8 @@
 .book-select:focus,
 .book-input:focus {
   outline: none;
-  border-color: var(--ff-gold);
+  border-color: var(--ff-gold-ui);
+  box-shadow: 0 0 0 2px var(--ff-gold-ui-dim);
 }
 
 .book-grid {
@@ -161,19 +162,19 @@
 }
 
 .book-card:hover {
-  border-color: var(--ff-gold);
-  background: rgba(212, 175, 55, 0.06);
+  border-color: var(--ff-gold-ui);
+  background: var(--ff-gold-ui-dim);
 }
 
 .book-card.selected {
-  border-color: var(--ff-gold);
-  background: rgba(212, 175, 55, 0.12);
+  border-color: var(--ff-gold-ui);
+  background: rgba(225, 185, 78, 0.18);
 }
 
 .book-card-price {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--ff-gold);
+  color: var(--ff-gold-ui);
 }
 
 .book-avatar {

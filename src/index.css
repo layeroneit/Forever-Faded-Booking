@@ -1,31 +1,57 @@
-/* Forever Faded — palette from logo.png: metallic gold, royal blue, black, teal/red accents */
+/* Forever Faded — brand palette: logo gold, royal blue, crimson, charcoal leather, UI gold & teal */
 :root {
-  --ff-black: #050508;
-  --ff-black-soft: #0c0c0f;
-  --ff-black-card: #12121a;
-  --ff-gold: #d4af37;
-  --ff-gold-light: #e8c547;
+  /* Background — charcoal textured black #141414 to #1C1C1C */
+  --ff-leather-base: #1c1c1c;
+  --ff-leather-mid: #141414;
+  --ff-leather-shadow: #050505;
+  --ff-leather-highlight: #2a2a2a;
+  --ff-black: #0a0a0a;
+  --ff-black-soft: #141414;
+  --ff-black-card: #1a1a1a;
+  /* Logo gold (crest, tools, crown, text) */
+  --ff-gold: #D4AF37;
+  --ff-gold-bright: #F2D77D;
+  --ff-gold-brass: #8A6B23;
+  --ff-gold-light: #F2D77D;
   --ff-gold-dim: rgba(212, 175, 55, 0.45);
+  /* UI accent — Sign-In button (flatter modern gold) */
+  --ff-gold-ui: #E1B94E;
+  --ff-gold-ui-dim: rgba(225, 185, 78, 0.45);
+  /* Royal/Navy blue (shield, barber pole) — match logo.png */
+  --ff-royal-blue: #0A1647;
+  --ff-royal-blue-light: #13256A;
+  --ff-royal-blue-accent: #2a4a8a; /* Lighter for links/tabs on dark bg */
+  --ff-royal-blue-accent-hover: #3d5fa3;
+  --ff-blue: #0A1647;
+  --ff-blue-light: #13256A;
+  /* Crimson red (barber pole stripes, crown jewels) */
+  --ff-crimson: #C1171D;
+  --ff-red: #C1171D;
+  --ff-red-light: #d91f26;
   --ff-white: #ffffff;
-  --ff-blue: #1e3a5f;
-  --ff-blue-light: #2c5282;
-  --ff-red: #a61e1e;
-  --ff-red-light: #b91c1c;
   --ff-gray: rgba(255, 255, 255, 0.62);
   --ff-gray-dim: rgba(255, 255, 255, 0.4);
-  --ff-bg: #050508;
-  --ff-card: rgba(18, 18, 26, 0.98);
+  --ff-bg: #050505;
+  --ff-card: rgba(26, 26, 26, 0.98);
   --ff-border: rgba(212, 175, 55, 0.32);
-  --ff-border-blue: rgba(30, 58, 95, 0.5);
-  --ff-border-red: rgba(166, 30, 30, 0.45);
+  --ff-border-blue: rgba(10, 22, 71, 0.5);
+  --ff-border-red: rgba(193, 23, 29, 0.45);
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
-  --ff-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cg stroke='%23fff' stroke-width='0.25' opacity='0.025' fill='none'%3E%3Cline x1='0' y1='0' x2='0' y2='24'/%3E%3Cline x1='4' y1='0' x2='4' y2='24'/%3E%3Cline x1='8' y1='0' x2='8' y2='24'/%3E%3Cline x1='12' y1='0' x2='12' y2='24'/%3E%3Cline x1='16' y1='0' x2='16' y2='24'/%3E%3Cline x1='20' y1='0' x2='20' y2='24'/%3E%3Cline x1='24' y1='0' x2='24' y2='24'/%3E%3Cline x1='0' y1='0' x2='24' y2='0'/%3E%3Cline x1='0' y1='4' x2='24' y2='4'/%3E%3Cline x1='0' y1='8' x2='24' y2='8'/%3E%3Cline x1='0' y1='12' x2='24' y2='12'/%3E%3Cline x1='0' y1='16' x2='24' y2='16'/%3E%3Cline x1='0' y1='20' x2='24' y2='20'/%3E%3Cline x1='0' y1='24' x2='24' y2='24'/%3E%3C/g%3E%3C/svg%3E");
-  --ff-accent-teal: #14b8a6;
-  --ff-accent-cyan: #22d3ee;
-  --ff-accent-cyan-dim: rgba(34, 211, 238, 0.45);
+  /* Pebbled leather grain (fallback when no PNG) */
+  --ff-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cg fill='%232a2a2a' opacity='0.08'%3E%3Ccircle cx='2' cy='5' r='0.8'/%3E%3Ccircle cx='12' cy='2' r='0.6'/%3E%3Ccircle cx='22' cy='12' r='0.7'/%3E%3Ccircle cx='8' cy='18' r='0.5'/%3E%3Ccircle cx='28' cy='8' r='0.6'/%3E%3Ccircle cx='35' cy='22' r='0.7'/%3E%3Ccircle cx='5' cy='32' r='0.5'/%3E%3Ccircle cx='18' cy='28' r='0.6'/%3E%3Ccircle cx='32' cy='35' r='0.5'/%3E%3C/g%3E%3C/svg%3E");
+  /* Seamless leather PNG — place in public/images/ for vignette + grain blend */
+  --ff-texture-image: url("/images/seamless-leather-texture.png");
+  /* Vignette over texture (rgba so grain shows through) */
+  --ff-bg-vignette: radial-gradient(circle at center, rgba(28, 28, 28, 0.8) 0%, rgba(5, 5, 5, 0.95) 100%);
+  /* Login screen — active tab & "Forgot password?" link */
+  --ff-teal: #2B8B9E;
+  --ff-teal-light: #3ba8b8;
+  --ff-accent-teal: #2B8B9E;
+  --ff-accent-cyan: #3ba8b8;
+  --ff-accent-cyan-dim: rgba(43, 139, 158, 0.45);
 }
 
 .ff-bg-waves {
@@ -53,6 +79,7 @@ html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 @media (max-width: 480px) {
@@ -63,27 +90,17 @@ html {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--ff-bg);
+  background-color: var(--ff-bg);
+  background-image: var(--ff-bg-vignette), var(--ff-texture-image);
+  background-blend-mode: multiply;
+  background-repeat: repeat;
+  background-size: auto;
   color: #ffffff;
   min-height: 100vh;
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   position: relative;
-}
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: var(--ff-texture);
-  background-repeat: repeat;
-  background-size: 24px 24px;
-  pointer-events: none;
-  z-index: 0;
 }
 body > #root {
   position: relative;
@@ -103,11 +120,15 @@ body > #root {
 a {
   color: var(--ff-gold);
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
 }
 
 button {
   font-family: inherit;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
 }
 
 input, select, textarea {
@@ -183,7 +204,8 @@ select:not([class]) {
 
 .btn {
   padding: clamp(0.625rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.25rem);
-  min-height: 44px;
+  min-height: 44px; /* Touch target: iOS/Android ≥44px */
+  min-width: 44px; /* Minimum touch target when icon-only */
   border-radius: 8px;
   font-weight: 600;
   font-size: clamp(0.875rem, 2vw, 1rem);
@@ -193,33 +215,35 @@ select:not([class]) {
   gap: 0.5rem;
   border: none;
   transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--ff-gold), var(--ff-gold-light));
-  color: var(--ff-black);
+  background: linear-gradient(135deg, var(--ff-gold-ui), var(--ff-gold-bright));
+  color: var(--ff-white);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+  box-shadow: 0 6px 20px rgba(225, 185, 78, 0.4);
 }
 
 .btn-secondary {
   background: transparent;
-  border: 1px solid var(--ff-gold);
-  color: var(--ff-gold);
+  border: 1px solid var(--ff-gold-ui);
+  color: var(--ff-gold-ui);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(212, 175, 55, 0.12);
+  background: var(--ff-gold-ui-dim);
 }
 
 .input-label {
   display: block;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--ff-gold);
+  color: var(--ff-gold-ui);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
@@ -238,13 +262,13 @@ select:not([class]) {
   border: 1px solid var(--ff-border);
   border-radius: 8px;
   color: var(--ff-white);
-  font-size: 1rem;
+  font-size: 16px; /* Prevents iOS zoom on focus when >= 16px */
 }
 
 .input-field:focus {
   outline: none;
-  border-color: var(--ff-gold);
-  box-shadow: 0 0 0 2px var(--ff-gold-dim);
+  border-color: var(--ff-gold-ui);
+  box-shadow: 0 0 0 2px var(--ff-gold-ui-dim);
 }
 
 [data-amplify-authenticator] {
@@ -253,9 +277,9 @@ select:not([class]) {
   --amplify-colors-border-primary: var(--ff-border);
   --amplify-colors-font-primary: var(--ff-white);
   --amplify-colors-font-secondary: var(--ff-gray);
-  --amplify-colors-brand-primary-80: var(--ff-gold);
-  --amplify-colors-brand-primary-90: var(--ff-gold-light);
-  --amplify-colors-brand-primary-100: var(--ff-gold);
+  --amplify-colors-brand-primary-80: var(--ff-gold-ui);
+  --amplify-colors-brand-primary-90: var(--ff-gold-bright);
+  --amplify-colors-brand-primary-100: var(--ff-gold-ui);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -279,7 +303,7 @@ select:not([class]) {
   padding: 0;
 }
 [data-amplify-authenticator] button[type="submit"] {
-  background: linear-gradient(135deg, var(--ff-gold), var(--ff-gold-light)) !important;
-  color: var(--ff-black) !important;
+  background: linear-gradient(135deg, var(--ff-gold-ui), var(--ff-gold-bright)) !important;
+  color: var(--ff-white) !important;
   font-weight: 700;
 }

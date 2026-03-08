@@ -1,10 +1,14 @@
 /* Forever Faded login — Gold, Black, Blue & Red */
 .login-page {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  padding-left: calc(1.5rem + env(safe-area-inset-left, 0px));
+  padding-right: calc(1.5rem + env(safe-area-inset-right, 0px));
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
   background: var(--ff-black);
   position: relative;
   overflow: hidden;
@@ -57,7 +61,7 @@
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.9rem;
   font-weight: 400;
-  color: var(--ff-gold);
+  color: var(--ff-gold-ui);
   letter-spacing: 0.12em;
   margin-bottom: 0.25rem;
 }
@@ -104,7 +108,7 @@
 
 .auth-footer-title {
   font-weight: 600;
-  color: var(--ff-gold);
+  color: var(--ff-gold-ui);
   margin-bottom: 0.5rem;
 }
 
@@ -127,14 +131,27 @@
   opacity: 0.9;
 }
 
-/* Backend not configured message */
+/* Backend not configured message — same charcoal leather as rest of site */
 .auth-setup-page {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: linear-gradient(135deg, var(--ff-black) 0%, #1a1a1a 100%);
+  padding-left: calc(1.5rem + env(safe-area-inset-left, 0px));
+  padding-right: calc(1.5rem + env(safe-area-inset-right, 0px));
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  background-color: var(--ff-bg);
+  background-image: var(--ff-bg-vignette), var(--ff-texture-image);
+  background-blend-mode: multiply;
+  background-repeat: repeat;
+  background-size: auto;
+  position: relative;
+}
+.auth-setup-page > * {
+  position: relative;
+  z-index: 1;
 }
 
 .auth-setup-card {
@@ -149,7 +166,7 @@
 
 .auth-setup-card h1 {
   font-size: 1.25rem;
-  color: var(--ff-gold);
+  color: var(--ff-gold-ui);
   margin-bottom: 0.75rem;
 }
 
@@ -166,5 +183,5 @@
   background: rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   font-size: 0.85rem;
-  color: var(--ff-gold);
+  color: var(--ff-gold-ui);
 }

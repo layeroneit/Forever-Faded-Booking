@@ -1,23 +1,17 @@
-/* Forever Faded layout — Gold, Black, Blue & Red */
+/* Forever Faded layout — charcoal leather theme */
 .layout {
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--ff-bg);
+  background-color: var(--ff-bg);
+  background-image: var(--ff-bg-vignette), var(--ff-texture-image);
+  background-blend-mode: multiply;
+  background-repeat: repeat;
+  background-size: auto;
   width: 100%;
   max-width: 100%;
   position: relative;
-}
-.layout::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: var(--ff-texture);
-  background-repeat: repeat;
-  background-size: 24px 24px;
-  pointer-events: none;
-  z-index: 0;
 }
 .layout > * {
   position: relative;
@@ -28,13 +22,15 @@
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
-  padding-top: calc(0.75rem + var(--safe-top));
+  padding-top: calc(0.75rem + var(--safe-top)); /* Notch / status bar on iOS */
+  padding-left: calc(1rem + var(--safe-left));
+  padding-right: calc(1rem + var(--safe-right));
   background: var(--ff-black);
   border-bottom: 1px solid var(--ff-border);
   position: sticky;
   top: 0;
   z-index: 50;
-  min-height: 56px;
+  min-height: 56px; /* Touch target area; total height includes safe-area padding */
 }
 
 .layout-header::after {
@@ -169,6 +165,7 @@
   flex: 1;
   padding: 1rem 0.75rem;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* iOS momentum scroll */
 }
 
 .layout-nav-link {
@@ -176,13 +173,15 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  min-height: 44px;
+  min-height: 44px; /* Touch target: iOS/Android */
   color: var(--ff-white);
   border-radius: 8px;
   margin-bottom: 0.25rem;
   transition: background 0.2s, border-color 0.2s;
   text-decoration: none;
   font-size: clamp(0.875rem, 2vw, 1rem);
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
 }
 
 .layout-nav-link:hover {
@@ -283,6 +282,7 @@
   min-height: calc(100dvh - 56px - var(--safe-top));
   transition: margin-left 0.2s;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* iOS momentum scroll */
 }
 
 .layout-main.full {
