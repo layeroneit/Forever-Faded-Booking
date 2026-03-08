@@ -271,15 +271,26 @@ select:not([class]) {
   box-shadow: 0 0 0 2px var(--ff-gold-ui-dim);
 }
 
+/* Amplify Authenticator — logo theme (gold, royal blue, charcoal). Applied globally so login always matches. */
 [data-amplify-authenticator] {
   --amplify-colors-background-primary: var(--ff-bg);
   --amplify-colors-background-secondary: var(--ff-card);
+  --amplify-colors-background-tertiary: var(--ff-black-card);
   --amplify-colors-border-primary: var(--ff-border);
-  --amplify-colors-font-primary: var(--ff-white);
-  --amplify-colors-font-secondary: var(--ff-gray);
-  --amplify-colors-brand-primary-80: var(--ff-gold-ui);
+  --amplify-colors-border-secondary: var(--ff-gold-dim);
+  --amplify-colors-font-primary: #ffffff;
+  --amplify-colors-font-secondary: rgba(255, 255, 255, 0.7);
+  --amplify-colors-font-tertiary: rgba(255, 255, 255, 0.5);
+  --amplify-colors-brand-primary-80: var(--ff-gold);
   --amplify-colors-brand-primary-90: var(--ff-gold-bright);
-  --amplify-colors-brand-primary-100: var(--ff-gold-ui);
+  --amplify-colors-brand-primary-100: var(--ff-gold);
+  --amplify-colors-brand-secondary-80: var(--ff-royal-blue-accent);
+  --amplify-colors-brand-secondary-90: var(--ff-royal-blue-accent-hover);
+  --amplify-colors-brand-secondary-100: var(--ff-royal-blue-accent);
+  --amplify-components-fieldcontrol-color: #ffffff;
+  --amplify-components-button-link-color: var(--ff-royal-blue-accent);
+  --amplify-components-tabs-item-active-color: var(--ff-royal-blue-accent);
+  --amplify-components-tabs-item-active-border-color: var(--ff-royal-blue-accent);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -290,8 +301,8 @@ select:not([class]) {
 [data-amplify-authenticator] [data-amplify-router] {
   width: 100%;
   max-width: 400px;
-  background: var(--ff-card);
-  border: 1px solid var(--ff-border);
+  background: var(--ff-black-card) !important;
+  border: 1px solid var(--ff-border) !important;
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -302,8 +313,32 @@ select:not([class]) {
   border-radius: 0;
   padding: 0;
 }
-[data-amplify-authenticator] button[type="submit"] {
-  background: linear-gradient(135deg, var(--ff-gold-ui), var(--ff-gold-bright)) !important;
-  color: var(--ff-white) !important;
+[data-amplify-authenticator] button[type="submit"],
+[data-amplify-authenticator] [data-amplify-button][data-variation="primary"] {
+  background: linear-gradient(135deg, var(--ff-gold), var(--ff-gold-bright)) !important;
+  color: #ffffff !important;
   font-weight: 700;
+}
+[data-amplify-authenticator] [data-amplify-tabs] [data-state="active"] {
+  color: var(--ff-royal-blue-accent) !important;
+  border-color: var(--ff-royal-blue-accent) !important;
+}
+[data-amplify-authenticator] a,
+[data-amplify-authenticator] [data-amplify-button][data-variation="link"] {
+  color: var(--ff-royal-blue-accent) !important;
+}
+[data-amplify-authenticator] input,
+[data-amplify-authenticator] [data-amplify-input] {
+  background: var(--ff-black-soft) !important;
+  border-color: var(--ff-border) !important;
+  color: #ffffff !important;
+}
+[data-amplify-authenticator] input:focus,
+[data-amplify-authenticator] [data-amplify-input]:focus {
+  border-color: var(--ff-gold) !important;
+  box-shadow: 0 0 0 2px var(--ff-gold-dim) !important;
+}
+[data-amplify-authenticator] label,
+[data-amplify-authenticator] [data-amplify-label] {
+  color: var(--ff-gold) !important;
 }

@@ -75,7 +75,12 @@ export default function Staff() {
         const staff = (profRes.data ?? []).filter((p) => STAFF_ROLES.includes(p.role ?? '')) as Schema['UserProfile']['type'][];
         setProfiles(staff);
         setLocations(locRes.data ?? []);
-        setPendingBarbers((pendingRes.data ?? []).filter((p) => p.status === 'pending'));
+        const fromServer = (pendingRes.data ?? []).filter((p) => p.status === 'pending') as Schema['PendingBarber']['type'][];
+        setPendingBarbers((prev) => {
+          const serverIds = new Set(fromServer.map((p) => p.id));
+          const onlyInState = prev.filter((p) => p.id && !serverIds.has(p.id));
+          return [...fromServer, ...onlyInState];
+        });
       })
       .catch((e) => setError(e instanceof Error ? e.message : 'Failed to load'))
       .finally(() => setLoading(false));
@@ -101,7 +106,7 @@ export default function Staff() {
     const invitedRole = form.invitedRole;
     const invitedName = form.name.trim();
     try {
-      await client.models.PendingBarber.create({
+      const { data: created } = await client.models.PendingBarber.create({
         name: invitedName,
         email: invitedEmail,
         phone: form.phone.trim() || undefined,
@@ -112,6 +117,11 @@ export default function Staff() {
       });
       setForm({ name: '', email: '', phone: '', locationId: '', invitedRole: 'barber' });
       setShowAdd(false);
+
+      /* Show new invite in Pending immediately (list() can be eventually consistent) */
+      if (created) {
+        setPendingBarbers((prev) => [created as Schema['PendingBarber']['type'], ...prev]);
+      }
 
       const appUrl = typeof window !== 'undefined' ? window.location.origin : '';
       const roleLabel = invitedRole === 'owner' ? 'owner' : 'barber';
@@ -156,6 +166,7 @@ export default function Staff() {
           ? ' Notification emails could not be sent — check EMAIL.md for SES setup (MAIL_FROM, verified identity).'
           : '';
       setInviteSuccess(`Invite sent to ${invitedEmail}. They'll receive an email to sign up. Invite expires in ${INVITE_EXPIRY_HOURS} hours. They appear below under Pending until they accept.${notifyNote}`);
+      /* Refetch to stay in sync with server (new invite already added optimistically above) */
       load();
     } catch (e) {
       setAddError(e instanceof Error ? e.message : 'Failed to add barber');
