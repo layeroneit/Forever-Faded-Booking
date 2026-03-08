@@ -75,7 +75,9 @@ export default function Staff() {
         const staff = (profRes.data ?? []).filter((p) => STAFF_ROLES.includes(p.role ?? '')) as Schema['UserProfile']['type'][];
         setProfiles(staff);
         setLocations(locRes.data ?? []);
-        const fromServer = (pendingRes.data ?? []).filter((p) => p.status === 'pending') as Schema['PendingBarber']['type'][];
+        const fromServer = (pendingRes.data ?? []).filter(
+          (p) => (p.status ?? 'pending') === 'pending'
+        ) as Schema['PendingBarber']['type'][];
         setPendingBarbers((prev) => {
           const serverIds = new Set(fromServer.map((p) => p.id));
           const onlyInState = prev.filter((p) => p.id && !serverIds.has(p.id));
@@ -86,9 +88,11 @@ export default function Staff() {
       .finally(() => setLoading(false));
   };
 
+  /* Load staff and pending invites once user is available (ensures auth for list()) */
   useEffect(() => {
+    if (!userId) return;
     load();
-  }, []);
+  }, [userId]);
 
   const isOwner = ['owner', 'admin'].includes(profile?.role ?? '');
   const isOwnerRole = (profile?.role ?? '').toLowerCase() === 'owner';
