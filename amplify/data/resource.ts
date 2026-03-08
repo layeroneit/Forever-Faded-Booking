@@ -43,7 +43,7 @@ const schema = a.schema({
     .handler(a.handler.function(createPaymentIntentFn))
     .authorization((allow) => [allow.authenticated()]),
 
-  /** Pending barber: owner adds barber (name, email, phone, location); when they sign up, profile is created from this. */
+  /** Pending barber: owner adds barber (name, email, phone, location); invite expires in 48h; when they sign up, profile is created from this. */
   PendingBarber: a
     .model({
       email: a.string().required(),
@@ -51,6 +51,7 @@ const schema = a.schema({
       phone: a.string(),
       locationId: a.string(),
       status: a.string().default('pending'),
+      createdAt: a.datetime(),
     })
     .authorization((allow) => [allow.authenticated()]),
 

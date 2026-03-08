@@ -3,12 +3,29 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
-import { MapPin, Plus, UserPlus } from 'lucide-react';
+import { MapPin, Plus, UserPlus, Trash2, Clock } from 'lucide-react';
 import '../styles/Book.css';
 
 const client = generateClient<Schema>();
 
 const STAFF_ROLES = ['barber', 'manager', 'owner', 'admin'];
+const INVITE_EXPIRY_HOURS = 48;
+
+function isInviteExpired(createdAt: string | null | undefined): boolean {
+  if (!createdAt) return true;
+  const created = new Date(createdAt).getTime();
+  const expiry = created + INVITE_EXPIRY_HOURS * 60 * 60 * 1000;
+  return Date.now() > expiry;
+}
+
+function getExpiryLabel(createdAt: string | null | undefined): string {
+  if (!createdAt) return 'Expired';
+  const created = new Date(createdAt).getTime();
+  const expiry = created + INVITE_EXPIRY_HOURS * 60 * 60 * 1000;
+  if (Date.now() > expiry) return 'Expired';
+  const d = new Date(expiry);
+  return `Expires ${d.toLocaleDateString()} ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+}
 
 export default function Staff() {
   const { user } = useAuthenticator((context) => [context.user]);
@@ -22,6 +39,9 @@ export default function Staff() {
   const [showAdd, setShowAdd] = useState(false);
   const [saving, setSaving] = useState(false);
   const [addError, setAddError] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [clearingExpired, setClearingExpired] = useState(false);
+  const [clearingAll, setClearingAll] = useState(false);
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -80,6 +100,7 @@ export default function Staff() {
         phone: form.phone.trim() || undefined,
         locationId: form.locationId || undefined,
         status: 'pending',
+        createdAt: new Date().toISOString(),
       });
       setForm({ name: '', email: '', phone: '', locationId: '' });
       setShowAdd(false);
@@ -90,6 +111,50 @@ export default function Staff() {
       setSaving(false);
     }
   };
+
+  const handleDeletePending = async (id: string) => {
+    if (!window.confirm('Remove this pending invite? They will need to be re-invited to sign up as barber.')) return;
+    setDeletingId(id);
+    try {
+      await client.models.PendingBarber.delete({ id });
+      load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to remove');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleRemoveExpired = async () => {
+    const expired = pendingBarbers.filter((p) => isInviteExpired(p.createdAt));
+    if (expired.length === 0) return;
+    if (!window.confirm(`Remove ${expired.length} expired invite(s)?`)) return;
+    setClearingExpired(true);
+    try {
+      await Promise.all(expired.map((p) => client.models.PendingBarber.delete({ id: p.id })));
+      load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to remove expired');
+    } finally {
+      setClearingExpired(false);
+    }
+  };
+
+  const handleClearAllPending = async () => {
+    if (pendingBarbers.length === 0) return;
+    if (!window.confirm(`Remove all ${pendingBarbers.length} pending invite(s)? They will need to be re-invited.`)) return;
+    setClearingAll(true);
+    try {
+      await Promise.all(pendingBarbers.map((p) => client.models.PendingBarber.delete({ id: p.id })));
+      load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to clear pending');
+    } finally {
+      setClearingAll(false);
+    }
+  };
+
+  const expiredCount = pendingBarbers.filter((p) => isInviteExpired(p.createdAt)).length;
 
   if (loading) return <div className="page-loading">Loading staff…</div>;
   if (error) return <div className="page-error">{error}</div>;
@@ -112,7 +177,7 @@ export default function Staff() {
             <form onSubmit={handleAddBarber} className="page-card" style={{ maxWidth: 480, padding: '1.5rem' }}>
               <h3 style={{ marginBottom: '1rem', color: 'var(--ff-gold)' }}>Add barber</h3>
               <p style={{ fontSize: '0.9rem', color: 'var(--ff-gray)', marginBottom: '1rem' }}>
-                Enter barber details. When they sign up with this email, their profile will be created with role &quot;barber&quot; and this location.
+                Enter barber details. When they sign up with this email, their profile will be created with role &quot;barber&quot; and this location. Invite expires in {INVITE_EXPIRY_HOURS} hours.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <label>
@@ -178,34 +243,81 @@ export default function Staff() {
 
       {pendingBarbers.length > 0 && (
         <div style={{ marginBottom: '1.5rem' }}>
-          <h3 style={{ fontSize: '1rem', color: 'var(--ff-gold)', marginBottom: '0.75rem' }}>Pending (not signed up yet)</h3>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {pendingBarbers.map((p) => (
-              <li
-                key={p.id}
-                style={{
-                  background: 'var(--ff-card)',
-                  border: '1px solid var(--ff-gold)',
-                  borderRadius: 12,
-                  padding: '0.75rem 1rem',
-                  marginBottom: '0.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                }}
+          <h3 style={{ fontSize: '1rem', color: 'var(--ff-gold)', marginBottom: '0.75rem' }}>
+            Pending invites (expire after {INVITE_EXPIRY_HOURS}h)
+          </h3>
+          {isOwner && (expiredCount > 0 || pendingBarbers.length > 0) && (
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+              {expiredCount > 0 && (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={handleRemoveExpired}
+                  disabled={clearingExpired}
+                >
+                  {clearingExpired ? 'Removing…' : `Remove expired (${expiredCount})`}
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={handleClearAllPending}
+                disabled={clearingAll}
               >
-                <UserPlus size={20} color="var(--ff-gold)" />
-                <div>
-                  <strong>{p.name}</strong> — {p.email}
-                  {p.phone && <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', color: 'var(--ff-gray)' }}>{p.phone}</span>}
-                  {p.locationId && locById[p.locationId] && (
-                    <div style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.25rem' }}>
-                      <MapPin size={12} /> {locById[p.locationId].name}
+                {clearingAll ? 'Removing…' : 'Clear all pending'}
+              </button>
+            </div>
+          )}
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {pendingBarbers.map((p) => {
+              const expired = isInviteExpired(p.createdAt);
+              return (
+                <li
+                  key={p.id}
+                  style={{
+                    background: expired ? 'rgba(185, 28, 28, 0.12)' : 'var(--ff-card)',
+                    border: `1px solid ${expired ? 'var(--ff-red)' : 'var(--ff-gold)'}`,
+                    borderRadius: 12,
+                    padding: '0.75rem 1rem',
+                    marginBottom: '0.5rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '0.75rem',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                    <UserPlus size={20} color={expired ? 'var(--ff-red)' : 'var(--ff-gold)'} />
+                    <div>
+                      <strong>{p.name}</strong> — {p.email}
+                      {p.phone && <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', color: 'var(--ff-gray)' }}>{p.phone}</span>}
+                      <div style={{ fontSize: '0.8rem', color: 'var(--ff-gray)', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        <Clock size={12} />
+                        {getExpiryLabel(p.createdAt)}
+                        {expired && <span style={{ color: 'var(--ff-red)', fontWeight: 600 }}>— Expired</span>}
+                      </div>
+                      {p.locationId && locById[p.locationId] && (
+                        <div style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.25rem' }}>
+                          <MapPin size={12} /> {locById[p.locationId].name}
+                        </div>
+                      )}
                     </div>
+                  </div>
+                  {isOwner && (
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      onClick={() => handleDeletePending(p.id)}
+                      disabled={deletingId === p.id}
+                      title="Remove this pending invite"
+                      style={{ flexShrink: 0, padding: '0.5rem' }}
+                    >
+                      {deletingId === p.id ? '…' : <Trash2 size={18} />}
+                    </button>
                   )}
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

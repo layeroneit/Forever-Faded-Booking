@@ -51,7 +51,11 @@ export default function Profile() {
         const pending = (pendingRes.data ?? []).find(
           (p) => p.status === 'pending' && (p.email ?? '').toLowerCase() === email.toLowerCase()
         ) as Schema['PendingBarber']['type'] | undefined;
-        if (pending) {
+        const pendingExpired = pending && (() => {
+          const created = pending.createdAt ? new Date(pending.createdAt).getTime() : 0;
+          return Date.now() > created + 48 * 60 * 60 * 1000;
+        })();
+        if (pending && !pendingExpired) {
           return client.models.UserProfile.create({
             userId,
             email: pending.email,
