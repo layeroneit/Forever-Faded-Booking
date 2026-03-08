@@ -40,9 +40,6 @@ export default function Settings() {
           <span>Password: change in Amplify Authenticator or AWS Cognito Console.</span>
         </div>
       </div>
-      <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--ff-gray)' }}>
-        Test users: see <strong>TEST-USERS.md</strong> — owner@foreverfaded.com, mike@foreverfaded.com, etc. (password: password123).
-      </p>
     </div>
   );
 }

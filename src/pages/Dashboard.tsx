@@ -187,10 +187,6 @@ export default function Dashboard() {
           <p style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: 'var(--ff-gold)' }}>{seedMessage}</p>
         )}
       </section>
-
-      <p className="dashboard-footer-note">
-        Test users (sign up with these): see <strong>TEST-USERS.md</strong> — owner@foreverfaded.com, mike@foreverfaded.com, chris@foreverfaded.com, john@example.com (password: password123).
-      </p>
     </div>
   );
 }

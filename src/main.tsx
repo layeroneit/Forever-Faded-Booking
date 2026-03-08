@@ -66,11 +66,11 @@ loadAmplifyConfig().then(async (outputs) => {
             <div className="auth-setup-card">
               <AuthHeader />
               <h1>Backend not configured</h1>
-              <p>Run the Amplify sandbox to create the auth backend and get the 4 test users set up.</p>
+              <p>Run the Amplify sandbox to create the auth backend.</p>
               <p>In the project folder, run:</p>
               <code>npx ampx sandbox</code>
               <p style={{ marginTop: '1rem' }}>
-                Then refresh this page. Use Sign up to create the 4 test accounts (see TEST-USERS.md), then sign in.
+                Then refresh this page. Use Sign up to create an account, then sign in.
               </p>
             </div>
           </div>

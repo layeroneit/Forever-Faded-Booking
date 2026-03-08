@@ -9,6 +9,24 @@
   background: #0a0a0a;
   position: relative;
   overflow: hidden;
+  /* Vignette — darker at edges for depth */
+  box-shadow: inset 0 0 40vmin 5vmin rgba(0, 0, 0, 0.4);
+}
+
+/* Textured black — same as body, woven look */
+.auth-portal-theme::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--ff-texture);
+  background-repeat: repeat;
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+.auth-portal-theme > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Golden wavy accents */
@@ -54,6 +72,8 @@
   height: auto;
   max-height: clamp(120px, 25vw, 200px);
   object-fit: contain;
+  /* Blend logo black with app textured black so they match */
+  mix-blend-mode: darken;
 }
 
 .auth-portal-left .auth-portal-brand {
@@ -158,15 +178,15 @@
   background: transparent !important;
 }
 
-/* Auth card — dark with gold border */
+/* Auth card — dark charcoal, floats with shadow (Gemini reference) */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-router] {
   width: 100%;
   max-width: min(420px, 100%);
-  background: rgba(22, 22, 22, 0.98) !important;
-  border: 1px solid rgba(201, 162, 39, 0.35);
+  background: #1a1a1a !important;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 16px;
   padding: clamp(1.25rem, 4vw, 2rem);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-form] {
@@ -210,24 +230,24 @@
   background: linear-gradient(135deg, #e5c158, #c9a227) !important;
 }
 
-/* Secondary / tab buttons */
+/* Active tab + links — blue-green accent (Gemini reference) */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-tabs] [data-state="active"] {
-  color: #c9a227 !important;
-  border-color: #c9a227 !important;
+  color: var(--ff-accent-cyan) !important;
+  border-color: var(--ff-accent-cyan) !important;
 }
 
-/* Links */
+/* Links (e.g. Forgot your password?) — blue-green */
 .auth-portal-theme [data-amplify-authenticator] a {
-  color: #c9a227 !important;
+  color: var(--ff-accent-cyan) !important;
 }
 
 .auth-portal-theme [data-amplify-authenticator] a:hover {
-  color: #e5c158 !important;
+  color: #67e8f9 !important;
 }
 
-/* Sign out / secondary actions */
+/* Sign out / secondary actions — keep link style */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="link"] {
-  color: #c9a227 !important;
+  color: var(--ff-accent-cyan) !important;
 }
 
 /* Force white/light text — override any dark blue or dark Amplify defaults */

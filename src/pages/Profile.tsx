@@ -228,6 +228,28 @@ export default function Profile() {
               {locationError && <p style={{ marginTop: '0.5rem', color: '#fca5a5', fontSize: '0.9rem' }}>{locationError}</p>}
             </div>
           )}
+          {profile.role === 'client' && (
+            <div style={{ marginTop: '1.5rem', padding: '1.25rem', background: 'var(--ff-card)', border: '1px solid var(--ff-border)', borderRadius: 12 }}>
+              <strong style={{ color: 'var(--ff-gold)' }}>Home location</strong>
+              <p style={{ marginTop: '0.25rem', marginBottom: '0.75rem', fontSize: '0.9rem', color: 'var(--ff-gray)' }}>
+                Choose your preferred location. It will be pre-selected when you book.
+              </p>
+              <select
+                className="book-select"
+                value={profile.locationId ?? ''}
+                onChange={(e) => handlePinLocation(profile.id, e.target.value || null)}
+                disabled={pinningLocation}
+                aria-label="Home location"
+              >
+                <option value="">— Select location —</option>
+                {locations.map((loc) => (
+                  <option key={loc.id} value={loc.id}>{loc.name}</option>
+                ))}
+              </select>
+              {pinningLocation && <span style={{ marginLeft: '0.5rem', fontSize: '0.9rem', color: 'var(--ff-gray)' }}>Updating…</span>}
+              {locationError && <p style={{ marginTop: '0.5rem', color: '#fca5a5', fontSize: '0.9rem' }}>{locationError}</p>}
+            </div>
+          )}
           {roleError && (
             <p style={{ marginTop: '0.75rem', color: '#fca5a5', fontSize: '0.9rem' }}>{roleError}</p>
           )}

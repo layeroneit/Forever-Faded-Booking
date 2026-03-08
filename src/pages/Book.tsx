@@ -142,11 +142,31 @@ export default function Book() {
         (p) => p.role === 'barber' && p.isActive !== false
       );
       setBarbers(barberProfiles);
-      if ((locRes.data ?? []).length > 0) setLocationId((locRes.data![0] as { id: string }).id);
+      const locs = locRes.data ?? [];
+      if (locs.length > 0) {
+        setLocationId((locs[0] as { id: string }).id);
+      }
       setLoading(false);
     };
     fetchData();
   }, []);
+
+  // When signed-in user has a profile with home location, default the location selector
+  useEffect(() => {
+    if (!userId || locations.length === 0) return;
+    let cancelled = false;
+    client.models.UserProfile.list()
+      .then(({ data }) => {
+        if (cancelled) return;
+        const mine = (data ?? []).find((p) => p.userId === userId);
+        const preferredId = mine?.locationId;
+        if (preferredId && locations.some((l) => l.id === preferredId)) {
+          setLocationId(preferredId);
+        }
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [userId, locations]);
 
   const barbersAtLocation = locationId
     ? barbers.filter((b) => b.locationId === locationId)
