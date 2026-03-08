@@ -62,7 +62,7 @@
 }
 
 .stat-card.stat-card-gold {
-  border-color: rgba(201, 162, 39, 0.5);
+  border-color: var(--ff-gold-dim);
 }
 
 .stat-card.stat-card-gold .stat-icon {
@@ -101,7 +101,7 @@
 
 .stat-card-link:hover {
   border-color: var(--ff-gold);
-  box-shadow: 0 8px 24px rgba(201, 162, 39, 0.15);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.15);
 }
 
 .stat-icon {

@@ -1,31 +1,31 @@
-/* Forever Faded — Gold, Black, Blue & Red (matches logo) */
+/* Forever Faded — palette from logo.png: metallic gold, royal blue, black, teal/red accents */
 :root {
-  --ff-black: #0a0a0a;
-  --ff-black-soft: #111111;
-  --ff-black-card: #161616;
-  --ff-gold: #c9a227;
-  --ff-gold-light: #e5c158;
-  --ff-gold-dim: rgba(201, 162, 39, 0.5);
+  --ff-black: #050508;
+  --ff-black-soft: #0c0c0f;
+  --ff-black-card: #12121a;
+  --ff-gold: #d4af37;
+  --ff-gold-light: #e8c547;
+  --ff-gold-dim: rgba(212, 175, 55, 0.45);
   --ff-white: #ffffff;
-  --ff-blue: #1e5aa8;
-  --ff-blue-light: #2563eb;
-  --ff-red: #b91c1c;
-  --ff-red-light: #dc2626;
-  --ff-gray: rgba(255, 255, 255, 0.6);
+  --ff-blue: #1e3a5f;
+  --ff-blue-light: #2c5282;
+  --ff-red: #a61e1e;
+  --ff-red-light: #b91c1c;
+  --ff-gray: rgba(255, 255, 255, 0.62);
   --ff-gray-dim: rgba(255, 255, 255, 0.4);
-  --ff-bg: #0a0a0a;
-  --ff-card: rgba(22, 22, 22, 0.98);
-  --ff-border: rgba(201, 162, 39, 0.35);
-  --ff-border-blue: rgba(30, 90, 168, 0.4);
-  --ff-border-red: rgba(185, 28, 28, 0.4);
+  --ff-bg: #050508;
+  --ff-card: rgba(18, 18, 26, 0.98);
+  --ff-border: rgba(212, 175, 55, 0.32);
+  --ff-border-blue: rgba(30, 58, 95, 0.5);
+  --ff-border-red: rgba(166, 30, 30, 0.45);
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
-  /* Woven fabric / brushed metal texture — fine lines, not speckle (matches Gemini reference) */
-  --ff-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cg stroke='%23fff' stroke-width='0.25' opacity='0.03' fill='none'%3E%3Cline x1='0' y1='0' x2='0' y2='24'/%3E%3Cline x1='4' y1='0' x2='4' y2='24'/%3E%3Cline x1='8' y1='0' x2='8' y2='24'/%3E%3Cline x1='12' y1='0' x2='12' y2='24'/%3E%3Cline x1='16' y1='0' x2='16' y2='24'/%3E%3Cline x1='20' y1='0' x2='20' y2='24'/%3E%3Cline x1='24' y1='0' x2='24' y2='24'/%3E%3Cline x1='0' y1='0' x2='24' y2='0'/%3E%3Cline x1='0' y1='4' x2='24' y2='4'/%3E%3Cline x1='0' y1='8' x2='24' y2='8'/%3E%3Cline x1='0' y1='12' x2='24' y2='12'/%3E%3Cline x1='0' y1='16' x2='24' y2='16'/%3E%3Cline x1='0' y1='20' x2='24' y2='20'/%3E%3Cline x1='0' y1='24' x2='24' y2='24'/%3E%3C/g%3E%3C/svg%3E");
+  --ff-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cg stroke='%23fff' stroke-width='0.25' opacity='0.025' fill='none'%3E%3Cline x1='0' y1='0' x2='0' y2='24'/%3E%3Cline x1='4' y1='0' x2='4' y2='24'/%3E%3Cline x1='8' y1='0' x2='8' y2='24'/%3E%3Cline x1='12' y1='0' x2='12' y2='24'/%3E%3Cline x1='16' y1='0' x2='16' y2='24'/%3E%3Cline x1='20' y1='0' x2='20' y2='24'/%3E%3Cline x1='24' y1='0' x2='24' y2='24'/%3E%3Cline x1='0' y1='0' x2='24' y2='0'/%3E%3Cline x1='0' y1='4' x2='24' y2='4'/%3E%3Cline x1='0' y1='8' x2='24' y2='8'/%3E%3Cline x1='0' y1='12' x2='24' y2='12'/%3E%3Cline x1='0' y1='16' x2='24' y2='16'/%3E%3Cline x1='0' y1='20' x2='24' y2='20'/%3E%3Cline x1='0' y1='24' x2='24' y2='24'/%3E%3C/g%3E%3C/svg%3E");
+  --ff-accent-teal: #14b8a6;
   --ff-accent-cyan: #22d3ee;
-  --ff-accent-cyan-dim: rgba(34, 211, 238, 0.5);
+  --ff-accent-cyan-dim: rgba(34, 211, 238, 0.45);
 }
 
 .ff-bg-waves {
@@ -36,7 +36,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120' fill='none' opacity='0.08'%3E%3Cpath d='M0 60 Q50 20 100 60 T200 60 T300 60 T400 60' stroke='%23c9a227' stroke-width='1.5' fill='none'/%3E%3Cpath d='M0 70 Q80 30 160 70 T320 70' stroke='%23c9a227' stroke-width='1' fill='none'/%3E%3Cpath d='M0 50 Q60 80 120 50 T240 50 T360 50' stroke='%23c9a227' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120' fill='none' opacity='0.07'%3E%3Cpath d='M0 60 Q50 20 100 60 T200 60 T300 60 T400 60' stroke='%23d4af37' stroke-width='1.5' fill='none'/%3E%3Cpath d='M0 70 Q80 30 160 70 T320 70' stroke='%23d4af37' stroke-width='1' fill='none'/%3E%3Cpath d='M0 50 Q60 80 120 50 T240 50 T360 50' stroke='%23d4af37' stroke-width='1' fill='none'/%3E%3C/svg%3E");
   background-size: 400px 120px;
   background-repeat: repeat-x;
   background-position: 0 0;
@@ -202,7 +202,7 @@ select:not([class]) {
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(201, 162, 39, 0.35);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
 }
 
 .btn-secondary {
@@ -212,7 +212,7 @@ select:not([class]) {
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(201, 162, 39, 0.12);
+  background: rgba(212, 175, 55, 0.12);
 }
 
 .input-label {

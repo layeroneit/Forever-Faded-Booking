@@ -4,8 +4,8 @@ Barbershop booking and management app built for **AWS Amplify Gen 2** (TypeScrip
 
 ## Features (aligned with forever-faded-platform)
 
-- **Auth:** Cognito (email/password). Test users: see **TEST-USERS.md** (owner@foreverfaded.com, mike@foreverfaded.com, etc.; password: password123).
-- **Design:** Same brand (gold/dark theme), layout with role-based nav, sidebar toggle, logo with fallback, UserProfile (name, role, location).
+- **Auth:** Cognito (email/password). Sign up in the app to create an account.
+- **Design:** Same brand (gold/dark theme), layout with role-based nav, sidebar toggle, logo with fallback, UserProfile (name, role, location). Replace `public/logo.png` with your logo to match the portal; bump `LOGO_VERSION` in `src/lib/logo.ts` and favicon in `index.html` when you change it.
 - **Data:** Locations, Services, Appointments, UserProfile (role: client | barber | manager | owner | admin).
 - **Pages:** Dashboard (with stats for owner/admin/manager), Book, Appointments (filtered by client when role=client), Profile, Locations, Services, Clients, Staff, Settings, Daily Cuts, Analytics, Schedule, Inventory, Payroll (placeholders where backend not yet implemented).
 - **Stripe:** Payment intents via Lambda; Book page pay-now flow.
@@ -48,7 +48,7 @@ Open http://localhost:5173. Sign up / sign in with Cognito, then use Dashboard, 
 
 ### 3. Add seed data and test users
 
-- **Same profiles and users as the platform:** Sign up with the test accounts in **[TEST-USERS.md](./TEST-USERS.md)** (e.g. `owner@foreverfaded.com` / `password123`, then create a UserProfile in Data manager with role `owner`).
+- **Same profiles and users as the platform:** Sign up in the app, then create a **UserProfile** in Amplify Console → Data → Data manager with the same email, name, and role (e.g. owner, barber, client).
 - **Location and services:** On the **Dashboard**, click **Seed location & services** to create the Waukesha location and the same service list as forever-faded-platform (Test Service $1, Face, Adults, Teens, Children, Seniors & Military).
 
 Or create Location, Service, and UserProfile manually in **Amplify Console** → **Data** → **Data manager**.

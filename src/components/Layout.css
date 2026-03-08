@@ -186,11 +186,11 @@
 }
 
 .layout-nav-link:hover {
-  background: rgba(201, 162, 39, 0.1);
+  background: rgba(212, 175, 55, 0.1);
 }
 
 .layout-nav-link.active {
-  background: rgba(201, 162, 39, 0.15);
+  background: rgba(212, 175, 55, 0.15);
   border-left: 3px solid var(--ff-gold);
   padding-left: calc(1rem - 3px);
   color: var(--ff-gold);

@@ -6,10 +6,9 @@
 .auth-portal-theme {
   min-height: 100vh;
   min-height: 100dvh;
-  background: #0a0a0a;
+  background: var(--ff-bg);
   position: relative;
   overflow: hidden;
-  /* Vignette — darker at edges for depth */
   box-shadow: inset 0 0 40vmin 5vmin rgba(0, 0, 0, 0.4);
 }
 
@@ -37,7 +36,7 @@
   left: 0;
   right: 0;
   height: 45%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' fill='none'%3E%3Cpath d='M0 120 Q150 40 300 120 T600 120 T900 120 T1200 120' stroke='%23c9a227' stroke-width='2' fill='none' opacity='0.25'/%3E%3Cpath d='M0 140 Q200 60 400 140 T800 140 T1200 140' stroke='%23c9a227' stroke-width='1.5' fill='none' opacity='0.18'/%3E%3Cpath d='M0 100 Q120 160 240 100 T480 100 T720 100 T960 100 T1200 100' stroke='%23c9a227' stroke-width='1' fill='none' opacity='0.15'/%3E%3Cpath d='M0 180 Q100 220 200 180 T400 180 T600 180 T800 180 T1000 180 T1200 180' stroke='%23c9a227' stroke-width='1' fill='none' opacity='0.12'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' fill='none'%3E%3Cpath d='M0 120 Q150 40 300 120 T600 120 T900 120 T1200 120' stroke='%23d4af37' stroke-width='2' fill='none' opacity='0.22'/%3E%3Cpath d='M0 140 Q200 60 400 140 T800 140 T1200 140' stroke='%23d4af37' stroke-width='1.5' fill='none' opacity='0.16'/%3E%3Cpath d='M0 100 Q120 160 240 100 T480 100 T720 100 T960 100 T1200 100' stroke='%23d4af37' stroke-width='1' fill='none' opacity='0.12'/%3E%3Cpath d='M0 180 Q100 220 200 180 T400 180 T600 180 T800 180 T1000 180 T1200 180' stroke='%23d4af37' stroke-width='1' fill='none' opacity='0.1'/%3E%3C/svg%3E");
   background-size: 1200px 300px;
   background-repeat: repeat-x;
   background-position: 0 0;
@@ -72,8 +71,6 @@
   height: auto;
   max-height: clamp(120px, 25vw, 200px);
   object-fit: contain;
-  /* Blend logo black with app textured black so they match */
-  mix-blend-mode: darken;
 }
 
 .auth-portal-left .auth-portal-brand {
@@ -158,18 +155,18 @@
 
 /* Authenticator container — fits in right panel */
 .auth-portal-theme [data-amplify-authenticator] {
-  --amplify-colors-background-primary: #0a0a0a;
-  --amplify-colors-background-secondary: rgba(22, 22, 22, 0.98);
-  --amplify-colors-background-tertiary: #161616;
-  --amplify-colors-border-primary: rgba(201, 162, 39, 0.35);
-  --amplify-colors-border-secondary: rgba(201, 162, 39, 0.2);
+  --amplify-colors-background-primary: var(--ff-bg);
+  --amplify-colors-background-secondary: var(--ff-card);
+  --amplify-colors-background-tertiary: var(--ff-black-card);
+  --amplify-colors-border-primary: var(--ff-border);
+  --amplify-colors-border-secondary: var(--ff-gold-dim);
   --amplify-colors-font-primary: #ffffff;
   --amplify-colors-font-secondary: rgba(255, 255, 255, 0.7);
   --amplify-colors-font-tertiary: rgba(255, 255, 255, 0.5);
-  --amplify-colors-brand-primary-80: #c9a227;
-  --amplify-colors-brand-primary-90: #e5c158;
-  --amplify-colors-brand-primary-100: #c9a227;
-  --amplify-colors-brand-secondary-10: rgba(201, 162, 39, 0.1);
+  --amplify-colors-brand-primary-80: var(--ff-gold);
+  --amplify-colors-brand-primary-90: var(--ff-gold-light);
+  --amplify-colors-brand-primary-100: var(--ff-gold);
+  --amplify-colors-brand-secondary-10: rgba(212, 175, 55, 0.1);
   min-height: auto;
   display: flex;
   align-items: center;
@@ -178,11 +175,11 @@
   background: transparent !important;
 }
 
-/* Auth card — dark charcoal, floats with shadow (Gemini reference) */
+/* Auth card — dark charcoal, floats with shadow (logo palette) */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-router] {
   width: 100%;
   max-width: min(420px, 100%);
-  background: #1a1a1a !important;
+  background: var(--ff-black-card) !important;
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 16px;
   padding: clamp(1.25rem, 4vw, 2rem);
@@ -194,11 +191,11 @@
   border: none;
 }
 
-/* Inputs — dark with gold accent, min 16px prevents iOS zoom on focus */
+/* Inputs — dark with gold accent (logo metallic gold) */
 .auth-portal-theme [data-amplify-authenticator] input,
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-input] {
-  background: rgba(10, 10, 10, 0.8) !important;
-  border-color: rgba(201, 162, 39, 0.35) !important;
+  background: var(--ff-black-soft) !important;
+  border-color: var(--ff-border) !important;
   color: #ffffff !important;
   font-size: 16px !important;
   min-height: 44px;
@@ -206,8 +203,8 @@
 
 .auth-portal-theme [data-amplify-authenticator] input:focus,
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-input]:focus {
-  border-color: #c9a227 !important;
-  box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.25) !important;
+  border-color: var(--ff-gold) !important;
+  box-shadow: 0 0 0 2px var(--ff-gold-dim) !important;
 }
 
 /* Labels */
@@ -216,38 +213,38 @@
   color: rgba(255, 255, 255, 0.9) !important;
 }
 
-/* Primary submit button — gold gradient */
+/* Primary submit button — metallic gold from logo, white text */
 .auth-portal-theme [data-amplify-authenticator] button[type="submit"],
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="primary"] {
-  background: linear-gradient(135deg, #c9a227, #e5c158) !important;
-  color: #0a0a0a !important;
+  background: linear-gradient(135deg, var(--ff-gold), var(--ff-gold-light)) !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
   border: none !important;
 }
 
 .auth-portal-theme [data-amplify-authenticator] button[type="submit"]:hover,
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="primary"]:hover {
-  background: linear-gradient(135deg, #e5c158, #c9a227) !important;
+  background: linear-gradient(135deg, var(--ff-gold-light), var(--ff-gold)) !important;
 }
 
-/* Active tab + links — blue-green accent (Gemini reference) */
+/* Active tab + links — teal from logo (crown/finial accent) */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-tabs] [data-state="active"] {
-  color: var(--ff-accent-cyan) !important;
-  border-color: var(--ff-accent-cyan) !important;
+  color: var(--ff-accent-teal) !important;
+  border-color: var(--ff-accent-teal) !important;
 }
 
-/* Links (e.g. Forgot your password?) — blue-green */
+/* Links (e.g. Forgot your password?) — teal to match logo */
 .auth-portal-theme [data-amplify-authenticator] a {
-  color: var(--ff-accent-cyan) !important;
+  color: var(--ff-accent-teal) !important;
 }
 
 .auth-portal-theme [data-amplify-authenticator] a:hover {
-  color: #67e8f9 !important;
+  color: #2dd4bf !important;
 }
 
-/* Sign out / secondary actions — keep link style */
+/* Sign out / secondary actions */
 .auth-portal-theme [data-amplify-authenticator] [data-amplify-button][data-variation="link"] {
-  color: var(--ff-accent-cyan) !important;
+  color: var(--ff-accent-teal) !important;
 }
 
 /* Force white/light text — override any dark blue or dark Amplify defaults */

@@ -152,7 +152,9 @@ export default function Staff() {
 
       const notifyNote = ownerNotifyCount > 0
         ? ` Owners have been notified by email.`
-        : '';
+        : isOwner
+          ? ' Notification emails could not be sent — check EMAIL.md for SES setup (MAIL_FROM, verified identity).'
+          : '';
       setInviteSuccess(`Invite sent to ${invitedEmail}. They'll receive an email to sign up. Invite expires in ${INVITE_EXPIRY_HOURS} hours. They appear below under Pending until they accept.${notifyNote}`);
       load();
     } catch (e) {
