@@ -56,13 +56,14 @@ export default function Profile() {
           return Date.now() > created + 48 * 60 * 60 * 1000;
         })();
         if (pending && !pendingExpired) {
+          const invitedRole = (pending as { invitedRole?: string }).invitedRole === 'owner' ? 'owner' : 'barber';
           return client.models.UserProfile.create({
             userId,
             email: pending.email,
             name: pending.name,
             phone: pending.phone ?? undefined,
             locationId: pending.locationId ?? undefined,
-            role: 'barber',
+            role: invitedRole,
             isActive: true,
           })
             .then(({ data: created }) => {

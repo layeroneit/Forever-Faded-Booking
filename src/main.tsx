@@ -85,7 +85,11 @@ loadAmplifyConfig().then(async (outputs) => {
         <div className="auth-portal-theme">
           <div className="auth-portal-split">
             <div className="auth-portal-left">
-              <img src={`${import.meta.env.BASE_URL || '/'}logo.png`.replace(/\/+/g, '/')} alt="Forever Faded" />
+              <img
+                src={`${import.meta.env.BASE_URL || '/'}logo.png`.replace(/\/+/g, '/')}
+                alt="Forever Faded — Est. 2008"
+                decoding="async"
+              />
               <div className="auth-portal-brand">
                 <h1>FOREVER FADED</h1>
                 <p>ESTD 2008 · For The Culture</p>

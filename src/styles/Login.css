@@ -40,9 +40,17 @@
 }
 
 .login-logo img {
-  max-height: 88px;
+  max-height: clamp(72px, 18vw, 100px);
   width: auto;
+  max-width: min(240px, 85vw);
+  object-fit: contain;
   margin-bottom: 0.5rem;
+}
+@media (max-width: 480px) {
+  .login-logo img {
+    max-height: 80px;
+    max-width: 160px;
+  }
 }
 
 .login-title {

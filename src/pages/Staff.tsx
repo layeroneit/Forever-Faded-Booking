@@ -84,6 +84,7 @@ export default function Staff() {
   }, []);
 
   const isOwner = ['owner', 'admin'].includes(profile?.role ?? '');
+  const isOwnerRole = (profile?.role ?? '').toLowerCase() === 'owner';
 
   const handleAddBarber = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,8 +102,9 @@ export default function Staff() {
         locationId: form.locationId || undefined,
         status: 'pending',
         createdAt: new Date().toISOString(),
+        invitedRole: form.invitedRole,
       });
-      setForm({ name: '', email: '', phone: '', locationId: '' });
+      setForm({ name: '', email: '', phone: '', locationId: '', invitedRole: 'barber' });
       setShowAdd(false);
       load();
     } catch (e) {
@@ -226,6 +228,23 @@ export default function Staff() {
                     ))}
                   </select>
                 </label>
+                {isOwnerRole && (
+                  <label>
+                    <span style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.9rem' }}>Invite as</span>
+                    <select
+                      className="book-select"
+                      value={form.invitedRole}
+                      onChange={(e) => setForm((f) => ({ ...f, invitedRole: e.target.value as 'barber' | 'owner' }))}
+                      aria-label="Invite as role"
+                    >
+                      <option value="barber">Barber</option>
+                      <option value="owner">Owner</option>
+                    </select>
+                    <span style={{ display: 'block', marginTop: '0.25rem', fontSize: '0.8rem', color: 'var(--ff-gray)' }}>
+                      Only owners can invite another owner. They will get this role when they sign up.
+                    </span>
+                  </label>
+                )}
                 {addError && <p style={{ color: '#fca5a5', fontSize: '0.9rem' }}>{addError}</p>}
                 <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
                   <button type="submit" className="btn btn-primary" disabled={saving}>
@@ -290,6 +309,9 @@ export default function Staff() {
                     <UserPlus size={20} color={expired ? 'var(--ff-red)' : 'var(--ff-gold)'} />
                     <div>
                       <strong>{p.name}</strong> — {p.email}
+                      {(p as { invitedRole?: string }).invitedRole === 'owner' && (
+                        <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--ff-gold)', textTransform: 'uppercase' }}>Owner</span>
+                      )}
                       {p.phone && <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', color: 'var(--ff-gray)' }}>{p.phone}</span>}
                       <div style={{ fontSize: '0.8rem', color: 'var(--ff-gray)', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                         <Clock size={12} />

@@ -157,8 +157,9 @@ export default function Layout() {
         <Link to="/" className="layout-logo">
           <img
             src={`${import.meta.env.BASE_URL || '/'}logo.png`.replace(/\/+/g, '/')}
-            alt="Forever Faded"
+            alt="Forever Faded — Est. 2008"
             className="layout-logo-img"
+            decoding="async"
             onError={(e) => {
               (e.target as HTMLImageElement).style.display = 'none';
               (e.target as HTMLImageElement).nextElementSibling?.classList.add('show');

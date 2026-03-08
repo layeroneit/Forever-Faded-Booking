@@ -9,7 +9,8 @@ export default function AuthHeader() {
     <div className="login-logo">
       <img
         src={logoUrl}
-        alt="Forever Faded"
+        alt="Forever Faded — Est. 2008"
+        decoding="async"
         onError={(e) => {
           (e.target as HTMLImageElement).style.display = 'none';
         }}
