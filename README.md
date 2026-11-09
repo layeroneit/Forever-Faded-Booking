@@ -2,6 +2,8 @@
 
 Barbershop booking and management app built for **AWS Amplify Gen 2** (TypeScript-first, code-first backend). Same features as [forever-faded-platform](https://github.com/layeroneit/forever-faded-platform), including services, appointments, locations, Stripe and email integrations — compatible with Amplify Hosting.
 
+Created by **Joseph J. Henderson** · Layer One IT Consultants
+
 ## Features (aligned with forever-faded-platform)
 
 - **Auth:** Cognito (email/password). Sign up in the app to create an account.
